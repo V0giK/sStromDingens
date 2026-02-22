@@ -170,11 +170,4 @@ sStromDingens/
 
 ---
 
-## Zukünftige Entwicklung
-
-Mögliche Erweiterungen:
-- [ ] Mehrere LED-Kanäle
-- [ ] Soft-Start / Fade-Effekte
-- [ ] Temperaturschutz implementieren
-- [ ] Status-LED hinzufügen
-- [ ] Firmware-Update via Bootloader
+## Coding-Standards

@@ -31,14 +31,3 @@ Alle Änderungen dieses Projekts werden in diesem Dokument festgehalten.
 | PC2 (Pin 6) | PWM-Ausgang → AL8862 CTRL |
 | PC4 (Pin 7) | RC-Eingang |
 | PD4 (Pin 8) | Fail-Safe-Jumper |
-
----
-
-## [Unreleased]
-
-### Geplant
-- [ ] Mehrere LED-Kanäle
-- [ ] Soft-Start / Fade-Effekte
-- [ ] Temperaturschutz
-- [ ] Status-LED
-- [ ] Firmware-Update via Bootloader
