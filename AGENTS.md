@@ -168,6 +168,3 @@ sStromDingens/
 - **Benennung**: `snake_case` für Variablen, `UPPER_SNAKE` für Defines
 - **Includes**: Relative Pfade mit `"..."` (nicht `<...>`)
 
----
-
-## Coding-Standards
