@@ -1,0 +1,43 @@
+# =======================
+# sStromDingens .gitignore
+# =======================
+
+# ---------- Software / Firmware ----------
+*.o
+*.d
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.obj
+obj/
+Debug/
+Release/
+.mrs/
+*.project
+*.cproject
+*.launch
+*.settings/
+*.swp
+*.swo
+*~
+
+# ---------- Hardware / KiCad ----------
+*.bak
+*.tmp
+*-backups
+*.pro.autosave
+*.sch.autosave
+*.kicad_pcb.autosave
+fp-info-cache
+*.ps
+*.pdf
+EasyEDA.3dshapes/
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+
+# ---------- Produktion (optional) ----------
+# Hardware/KiCad/sStromDingens/production/

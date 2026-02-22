@@ -1,0 +1,10 @@
+CompileFlags:
+  CompilationDatabase: .
+  Remove:
+    - -mcpu*
+    - -mabi*
+    - -march*
+    - -mcmodel*
+
+InlayHints:
+  Enabled: Yes
