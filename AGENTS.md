@@ -11,7 +11,7 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 | **Name** | sStromDingens |
 | **Beschreibung** | RC-Signal zu PWM Konverter für 1W LED-Dimmung |
 | **Hardware Version** | 1.0 |
-| **Firmware Version** | 1.0 |
+| **Firmware Version** | 1.0.1 |
 | **Status** | Hardware fertig, Firmware in Entwicklung |
 | **Lizenz** | MIT |
 

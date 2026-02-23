@@ -54,6 +54,14 @@ Siehe: `Hardware/KiCad/sStromDingens/production/bom.csv`
 | Periode | 20ms (50Hz) |
 | Pulsbreite | 1ms - 2ms |
 
+### PWM-Ausgang
+
+| Parameter | Wert |
+|-----------|------|
+| Frequenz | ~1000Hz |
+| Spannungsbereich | 0V - 3.3V |
+| Duty-Cycle | 0% - 100% |
+
 ### Betriebsmodi
 
 | Modus | Aktivierung | Verhalten |

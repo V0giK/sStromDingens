@@ -4,6 +4,16 @@ Alle Änderungen dieses Projekts werden in diesem Dokument festgehalten.
 
 ---
 
+## [1.0.1] - 2026-02-23
+
+### Software
+- Debug-Dateien (debug.h, debug.c) hinzugefügt
+- printf-Unterstützung entfernt (16KB Flash-Limit)
+- .clangd Konfiguration für Language Server
+- PWM-Frequenz auf ~1000Hz korrigiert
+
+---
+
 ## [1.0.0] - 2026-02-22
 
 ### Hardware
