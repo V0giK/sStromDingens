@@ -48,7 +48,8 @@ Eingang (5V-60V LiPo 2S-3S)
 ### Wichtige Datasheets
 
 - [AL8862 Datasheet](Hardware/Documents/AL8862_C526360.pdf)
-- CH32V003J4M6: WCH RISC-V 32-bit MCU
+- [CH32V003 Datasheet](Hardware/Documents/ch32v003.pdf)
+- [CH32V003J4M6 Pinout](Hardware/Documents/CH32V003J4M6_PinOut.txt)
 
 ### KiCad Projekt
 
