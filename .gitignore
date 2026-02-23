@@ -32,7 +32,6 @@ Release/
 *.kicad_pcb.autosave
 fp-info-cache
 *.ps
-*.pdf
 EasyEDA.3dshapes/
 
 # ---------- OS ----------
