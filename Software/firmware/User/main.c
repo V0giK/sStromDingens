@@ -132,19 +132,8 @@ int main(void)
     SystemCoreClockUpdate();
     Delay_Init();
 
-#if (SDI_PRINT == SDI_PR_OPEN)
-    SDI_Printf_Enable();
-#else
-    USART_Printf_Init(115200);
-#endif
-
-    printf("SystemClk: %d\r\n", SystemCoreClock);
-    printf("RC to AL8862 PWM Converter %s\r\n", VERSION_STRING);
-
     GPIO_Init_Custom();
     TIM1_Init();
-
-    printf("Init complete\r\n");
 
     while (1)
     {

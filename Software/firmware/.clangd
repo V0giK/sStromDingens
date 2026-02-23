@@ -1,5 +1,9 @@
 CompileFlags:
   CompilationDatabase: .
+  Add:
+    - -IC:/Users/Buero/Downloads/Projekte/sStromDingens/Software/firmware/User
+    - -IC:/Users/Buero/Downloads/Projekte/sStromDingens/Software/firmware/Core
+    - -IC:/Users/Buero/Downloads/Projekte/sStromDingens/Software/firmware/Peripheral/inc
   Remove:
     - -mcpu*
     - -mabi*
