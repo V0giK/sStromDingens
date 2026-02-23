@@ -6,6 +6,9 @@ Alle Änderungen dieses Projekts werden in diesem Dokument festgehalten.
 
 ## [1.0.1] - 2026-02-23
 
+### Hardware
+- (keine Änderungen, bleibt auf Version 1.0)
+
 ### Software
 - Debug-Dateien (debug.h, debug.c) hinzugefügt
 - printf-Unterstützung entfernt (16KB Flash-Limit)
