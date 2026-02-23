@@ -15,6 +15,15 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 | **Status** | Hardware fertig, Firmware in Entwicklung |
 | **Lizenz** | MIT |
 
+### Versionsschema
+
+Das Projekt verwendet das Versionsschema **X.Y.Z**:
+- **X**: Hardware-Version
+- **Y**: Software-Hauptversion  
+- **Z**: Software-Bugfix
+
+Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
+
 ---
 
 ## Hardware

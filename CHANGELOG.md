@@ -2,14 +2,18 @@
 
 Alle Änderungen dieses Projekts werden in diesem Dokument festgehalten.
 
+Versionsschema: **X.Y.Z**
+- **X**: Hardware-Version
+- **Y**: Software-Hauptversion
+- **Z**: Software-Bugfix
+
 ---
 
 ## [1.0.1] - 2026-02-23
 
-### Hardware
-- (keine Änderungen, bleibt auf Version 1.0)
+### Hardware v1.0 (unverändert)
 
-### Software
+### Software v1.0.1
 - Debug-Dateien (debug.h, debug.c) hinzugefügt
 - printf-Unterstützung entfernt (16KB Flash-Limit)
 - .clangd Konfiguration für Language Server
@@ -19,15 +23,15 @@ Alle Änderungen dieses Projekts werden in diesem Dokument festgehalten.
 
 ## [1.0.0] - 2026-02-22
 
-### Hardware
+### Hardware v1.0
 - Erste Version der Platine (v1.0)
 - AL8862 Konstantstrom-LED-Treiber
 - CH32V003J4M6 Mikrocontroller (SOP-8)
 - Eingangsspannung: 5V-60V (LiPo 2S-3S)
 - 1W LED ohne Vorwiderstand
 
-### Software
-- Erste Version der Firmware (v1.0)
+### Software v1.0.0
+- Erste Version der Firmware
 - RC-Signal zu PWM Konverter
 - Linearer Modus: 1ms → 0%, 2ms → 100%
 - On/Off Modus: Schwelle bei 1.5ms
