@@ -1,7 +1,7 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main.c
  * Author             : WCH
- * Version            : V1.0.0
+ * Version            : V1.0.1
  * Date               : 2023/12/25
  * Description        : RC-Signal to AL8862 PWM converter
  *********************************************************************************
@@ -30,13 +30,13 @@
 #define RC_MAX_US           2000
 #define RC_THRESHOLD_US     1500
 #define RC_TIMEOUT_MS       50
-#define PWM_FREQUENCY_HZ    200
+#define PWM_FREQUENCY_HZ    1000
 #define LOOP_TICK_MS        10
 
 #define VERSION_MAJOR       1
-#define VERSION_MINOR       0
+#define VERSION_MINOR       1
 #define VERSION_PATCH      0
-#define VERSION_STRING      "v1.0.0"
+#define VERSION_STRING      "v1.0.1"
 
 volatile uint16_t rc_pulse_us = 0;
 volatile uint8_t rc_valid = 0;
