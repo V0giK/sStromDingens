@@ -2,6 +2,8 @@
 
 RC-Signal zu PWM Konverter für 1W LED-Dimmung mit Konstantstromversorgung.
 
+**Firmware Version:** v1.1.0
+
 ## Überblick
 
 Dieses Projekt ermöglicht das Dimmen einer **1W LED** mittels RC-Signal (z.B. aus einem RC-Empfänger oder Fernsteuerung). Die LED wird **ohne Vorwiderstand** betrieben - die Helligkeit ist **unabhängig von der Akkuspannung**.
@@ -40,10 +42,10 @@ Siehe: `Hardware/KiCad/sStromDingens/production/bom.csv`
 
 | Pin | Funktion |
 |-----|----------|
-| PC4 | RC-Eingang (TIM1_CH4) |
-| PC2 | PWM-Ausgang (TIM1_CH2) → AL8862 CTRL |
-| PC1 | Mode-Jumper (GND = Linear) |
-| PD4 | Fail-Safe-Jumper (GND = 100%) |
+| PC4 | RC-Eingang (TIM1_CH4 Input-Capture) |
+| PC2 | PWM-Ausgang (Software-PWM via TIM2) → AL8862 CTRL |
+| PC1 | Mode-Jumper (GND = Linear, OFFEN = On/Off) |
+| PD4 | Fail-Safe-Jumper (GND = 100% bei Signalverlust) |
 
 ## Software
 
@@ -53,12 +55,13 @@ Siehe: `Hardware/KiCad/sStromDingens/production/bom.csv`
 |-----------|------|
 | Periode | 20ms (50Hz) |
 | Pulsbreite | 1ms - 2ms |
+| Timeout | 50ms ohne Signal |
 
 ### PWM-Ausgang
 
 | Parameter | Wert |
 |-----------|------|
-| Frequenz | ~1000Hz |
+| Frequenz | ~100Hz (Software-PWM) |
 | Spannungsbereich | 0V - 3.3V |
 | Duty-Cycle | 0% - 100% |
 
@@ -70,6 +73,13 @@ Siehe: `Hardware/KiCad/sStromDingens/production/bom.csv`
 | **On/Off** | PC1 = OFFEN | <1.5ms = Aus, ≥1.5ms = An |
 | **Fail-Safe (100%)** | PD4 = GND + kein Signal | Ausgang = 100% |
 | **Fail-Safe (0%)** | PD4 = OFFEN + kein Signal | Ausgang = 0% |
+
+### Timer-Nutzung
+
+| Timer | Funktion |
+|-------|----------|
+| TIM1 | RC-Input (Input-Capture an CH4) |
+| TIM2 | Software-PWM (~10kHz Interrupt) |
 
 ### Build
 
@@ -86,6 +96,12 @@ sStromDingens/
 │   └── KiCad/
 └── Software/
     └── firmware/       # CH32V003 Firmware
+        ├── User/       # main.c, ch32v00x_it.c
+        ├── Core/       # RISC-V Core
+        ├── Peripheral/ # HAL Treiber
+        ├── Debug/      # Debug-Funktionen
+        ├── Startup/    # Startup-Code
+        └── Ld/         # Linker-Skript
 ```
 
 ## Lizenz

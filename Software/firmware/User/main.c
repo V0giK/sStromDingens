@@ -1,11 +1,11 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.1
- * Date               : 2023/12/25
- * Description        : RC-Signal to AL8862 PWM converter
+ * Author             : V0giK
+ * Version            : V1.1.0
+ * Date               : 2026/03/10
+ * Description        : RC-Signal to AL8862 PWM converter (Software-PWM)
  *********************************************************************************
- * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
+ * Copyright (c) 2026 V0giK
  *******************************************************************************/
 
 #include "debug.h"
@@ -32,14 +32,18 @@
 #define RC_TIMEOUT_MS       50
 #define PWM_FREQUENCY_HZ    1000
 #define LOOP_TICK_MS        10
+#define PWM_TICK_US         100
 
 #define VERSION_MAJOR       1
 #define VERSION_MINOR       1
 #define VERSION_PATCH      0
-#define VERSION_STRING      "v1.0.1"
+#define VERSION_STRING      "v1.1.0"
 
 volatile uint16_t rc_pulse_us = 0;
 volatile uint8_t rc_valid = 0;
+volatile uint8_t pwm_duty_set = 0;
+volatile uint16_t pwm_counter = 0;
+volatile uint16_t pwm_period = 10000 / PWM_TICK_US;
 
 void GPIO_Init_Custom(void)
 {
@@ -54,7 +58,7 @@ void GPIO_Init_Custom(void)
     GPIO_Init(RC_INPUT_PORT, &GPIO_InitStructure);
 
     GPIO_InitStructure.GPIO_Pin = PWM_OUTPUT_PIN;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(PWM_OUTPUT_PORT, &GPIO_InitStructure);
 
     GPIO_InitStructure.GPIO_Pin = MODE_JUMPER_PIN;
@@ -70,7 +74,6 @@ void TIM1_Init(void)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
     TIM_ICInitTypeDef TIM_ICInitStructure;
-    TIM_OCInitTypeDef TIM_OCInitStructure;
     NVIC_InitTypeDef NVIC_InitStructure;
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
@@ -89,19 +92,6 @@ void TIM1_Init(void)
     TIM_ICInitStructure.TIM_ICFilter = 0x03;
     TIM_ICInit(TIM1, &TIM_ICInitStructure);
 
-    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-    TIM_OCInitStructure.TIM_Pulse = 0;
-    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-    TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
-    TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
-    TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
-    TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
-    TIM_OC2Init(TIM1, &TIM_OCInitStructure);
-    TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
-
-    GPIO_PinRemapConfig(GPIO_FullRemap_TIM1, ENABLE);
-
     TIM_ITConfig(TIM1, TIM_IT_CC4, ENABLE);
 
     NVIC_InitStructure.NVIC_IRQChannel = TIM1_CC_IRQn;
@@ -113,11 +103,33 @@ void TIM1_Init(void)
     TIM_Cmd(TIM1, ENABLE);
 }
 
+void TIM2_Init(void)
+{
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+
+    TIM_TimeBaseStructure.TIM_Period = (48000000 / 8 / (1000000 / PWM_TICK_US)) - 1;
+    TIM_TimeBaseStructure.TIM_Prescaler = 8 - 1;
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+    TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+
+    NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+
+    TIM_Cmd(TIM2, ENABLE);
+}
+
 void Set_PWM_Duty(uint8_t duty_percent)
 {
-    uint32_t period = TIM1->ATRLR + 1;
-    uint32_t pulse = (period * duty_percent) / 100;
-    TIM_SetCompare2(TIM1, pulse);
+    pwm_duty_set = duty_percent;
 }
 
 int main(void)
@@ -134,6 +146,12 @@ int main(void)
 
     GPIO_Init_Custom();
     TIM1_Init();
+    TIM2_Init();
+
+    linear_mode = !GPIO_ReadInputDataBit(MODE_JUMPER_PORT, MODE_JUMPER_PIN);
+    failsafe_high = !GPIO_ReadInputDataBit(FAILSAFE_JUMPER_PORT, FAILSAFE_JUMPER_PIN);
+
+    Set_PWM_Duty(0);
 
     while (1)
     {
@@ -144,26 +162,28 @@ int main(void)
             no_signal_counter = 0;
             signal_timeout = 0;
 
+            uint16_t rc_pulse = rc_pulse_us;
+            rc_valid = 0;
+
             if (linear_mode)
             {
-                if (rc_pulse_us <= RC_MIN_US)
+                if (rc_pulse <= RC_MIN_US)
                 {
                     pwm_duty = 0;
                 }
-                else if (rc_pulse_us >= RC_MAX_US)
+                else if (rc_pulse >= RC_MAX_US)
                 {
                     pwm_duty = 100;
                 }
                 else
                 {
-                    pwm_duty = (uint8_t)(((rc_pulse_us - RC_MIN_US) * 100) / (RC_MAX_US - RC_MIN_US));
+                    pwm_duty = (uint8_t)(((rc_pulse - RC_MIN_US) * 100) / (RC_MAX_US - RC_MIN_US));
                 }
             }
             else
             {
-                pwm_duty = (rc_pulse_us >= RC_THRESHOLD_US) ? 100 : 0;
+                pwm_duty = (rc_pulse >= RC_THRESHOLD_US) ? 100 : 0;
             }
-            rc_valid = 0;
         }
         else
         {

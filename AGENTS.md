@@ -11,8 +11,8 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 | **Name** | sStromDingens |
 | **Beschreibung** | RC-Signal zu PWM Konverter für 1W LED-Dimmung |
 | **Hardware Version** | 1.0 |
-| **Firmware Version** | 1.0.1 |
-| **Status** | Hardware fertig, Firmware in Entwicklung |
+| **Firmware Version** | 1.1.0 |
+| **Status** | Hardware fertig, Firmware funktionsfähig (v1.1.0) |
 | **Lizenz** | MIT |
 
 ### Versionsschema
@@ -92,7 +92,7 @@ Eingang (5V-60V LiPo 2S-3S)
 | Pin | Funktion | Beschreibung |
 |-----|----------|---------------|
 | 5 (PC4) | RC-Eingang | Input-Capture TIM1_CH4 |
-| 6 (PC2) | PWM-Ausgang | PWM TIM1_CH2 → AL8862 CTRL |
+| 6 (PC2) | PWM-Ausgang | Software-PWM (TIM2) → AL8862 CTRL |
 | 7 (PC1) | Mode-Jumper | GND = Linear, OFFEN = On/Off |
 | 8 (PD4) | Fail-Safe | GND = 100% bei Signalverlust |
 
@@ -118,9 +118,16 @@ Eingang (5V-60V LiPo 2S-3S)
 
 | Parameter | Wert |
 |-----------|------|
-| **Frequenz** | ~1000Hz |
+| **Frequenz** | ~100Hz (Software-PWM) |
 | **Spannungsbereich** | 0V - 3.3V |
 | **Duty-Cycle** | 0% - 100% |
+
+### Timer-Nutzung
+
+| Timer | Funktion | Beschreibung |
+|-------|----------|-------------|
+| TIM1 | RC-Input | Input-Capture an CH4 für RC-Signal |
+| TIM2 | Software-PWM | ~10kHz Interrupt für PWM-Signal |
 
 ---
 
@@ -130,7 +137,38 @@ Eingang (5V-60V LiPo 2S-3S)
 
 1. Projekt öffnen: `Software/firmware/firmware.project`
 2. Build: `Project → Build Project` (Strg+B)
-3. Flashen: `Run → Debug` oder `Run → Run`
+3. Flashen: `Tools → WCH-LinkUtility`
+
+### CLI Build (Terminal)
+
+**Compiler:**
+```
+riscv-none-embed-gcc -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -Wall
+```
+
+**Toolchain-Pfad:**
+```
+C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Toolchain\RISC-V Embedded GCC\bin\
+```
+
+**Beispiel komplett (im firmware-Ordner):**
+```
+"C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Toolchain\RISC-V Embedded GCC\bin\riscv-none-embed-gcc.exe" -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -Wall -IDebug -ICore -IUser -IPeripheral/inc -c User/main.c -o obj/main.o
+...
+```
+
+**Linker:**
+```
+riscv-none-embed-gcc -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -nostartfiles -Xlinker --gc-sections -T Ld/Link.ld -o firmware.elf [object files] -lprintf -specs=nosys.specs -specs=nano.specs
+```
+
+### Flashen
+
+**WCH-LinkUtility CLI:**
+```
+"C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Others\SWDTool\default\WCH-LinkUtility.exe"
+```
+(Öffnet GUI - Datei auswählen und flashen)
 
 ### Kompiler-Flags
 
@@ -174,7 +212,7 @@ sStromDingens/
 
 - **Sprache**: C (GNU99)
 - **Einrückung**: 4 Leerzeichen
-- **Kommentare**: Englisch oder Deutsch
+- **Kommentare**: Deutsch
 - **Benennung**: `snake_case` für Variablen, `UPPER_SNAKE` für Defines
 - **Includes**: Relative Pfade mit `"..."` (nicht `<...>`)
 
