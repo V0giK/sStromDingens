@@ -9,6 +9,18 @@ Versionsschema: **X.Y.Z**
 
 ---
 
+## [1.1.0] - 2026-03-10
+
+### Hardware v1.0 (unverändert)
+
+### Software v1.1.0
+- Software-PWM via TIM2 implementiert (Hardware-PWM funktionierte nicht)
+- Race-Condition behoben: Kopie von rc_pulse_us vor Löschen von rc_valid
+- Author geändert zu V0giK, Copyright aktualisiert
+- AGENTS.md und README.md aktualisiert
+
+---
+
 ## [1.0.1] - 2026-02-23
 
 ### Hardware v1.0 (unverändert)
