@@ -1,98 +1,71 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : ch32v00x_it.c
  * Author             : V0giK
- * Version            : V1.1.0
- * Date               : 2026/03/10
+ * Version            : V1.2.0
+ * Date               : 2026/03/17
  * Description        : Main Interrupt Service Routines.
  *********************************************************************************
  * Copyright (c) 2026 V0giK
  *******************************************************************************/
 #include <ch32v00x_it.h>
 
-#define RC_MIN_US   1000
-#define RC_MAX_US   2000
-
+extern volatile uint8_t pwm_duty;
 extern volatile uint16_t rc_pulse_us;
-extern volatile uint8_t rc_valid;
-extern volatile uint8_t pwm_duty_set;
-extern volatile uint16_t pwm_counter;
-extern volatile uint16_t pwm_period;
+extern volatile uint8_t rc_new_data;
+extern volatile uint16_t rc_start_time;
 
-#define PWM_OUTPUT_PIN  GPIO_Pin_2
-#define PWM_OUTPUT_PORT GPIOC
-
-static uint16_t rc_capture_old = 0;
+static uint8_t pwm_counter = 0;
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void TIM1_CC_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+void EXTI7_0_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void TIM2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
-/*********************************************************************
- * @fn      NMI_Handler
- *
- * @brief   This function handles NMI exception.
- *
- * @return  none
- */
 void NMI_Handler(void)
 {
-  while (1)
-  {
-  }
+    while (1)
+    {
+    }
 }
 
-/*********************************************************************
- * @fn      HardFault_Handler
- *
- * @brief   This function handles Hard Fault exception.
- *
- * @return  none
- */
 void HardFault_Handler(void)
 {
-  NVIC_SystemReset();
-  while (1)
-  {
-  }
+    NVIC_SystemReset();
+    while (1)
+    {
+    }
 }
 
-/*********************************************************************
- * @fn      TIM1_CC_IRQHandler
- *
- * @brief   TIM1 Capture Compare IRQ - RC Input Capture
- *
- * @return  none
- */
-void TIM1_CC_IRQHandler(void)
+void EXTI7_0_IRQHandler(void)
 {
-    uint16_t capture;
-    uint16_t diff;
-
-    if (TIM_GetITStatus(TIM1, TIM_IT_CC4) != RESET)
+    if (EXTI_GetITStatus(EXTI_Line4) != RESET)
     {
-        capture = TIM_GetCapture4(TIM1);
+        EXTI_ClearITPendingBit(EXTI_Line4);
 
-        if (rc_capture_old != 0)
+        if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_4))
         {
-            if (capture >= rc_capture_old)
+            rc_start_time = TIM1->CNT;
+        }
+        else
+        {
+            uint16_t rc_end_time = TIM1->CNT;
+            uint16_t diff;
+
+            if (rc_end_time >= rc_start_time)
             {
-                diff = capture - rc_capture_old;
+                diff = rc_end_time - rc_start_time;
             }
             else
             {
-                diff = (0xFFFF - rc_capture_old) + capture + 1;
+                diff = (0xFFFF - rc_start_time) + rc_end_time + 1;
             }
 
-            if (diff >= RC_MIN_US && diff <= (RC_MAX_US + 500))
+            if (diff >= 800 && diff <= 2500)
             {
                 rc_pulse_us = diff;
-                rc_valid = 1;
+                rc_new_data = 1;
             }
         }
-
-        rc_capture_old = capture;
-        TIM_ClearITPendingBit(TIM1, TIM_IT_CC4);
     }
 }
 
@@ -100,25 +73,21 @@ void TIM2_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
     {
-        uint16_t duty = (pwm_duty_set * pwm_period) / 100;
+        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 
-        if (pwm_counter < duty)
+        if (pwm_counter < pwm_duty)
         {
-            GPIO_SetBits(PWM_OUTPUT_PORT, PWM_OUTPUT_PIN);
+            GPIO_SetBits(GPIOC, GPIO_Pin_2);
         }
         else
         {
-            GPIO_ResetBits(PWM_OUTPUT_PORT, PWM_OUTPUT_PIN);
+            GPIO_ResetBits(GPIOC, GPIO_Pin_2);
         }
 
         pwm_counter++;
-        if (pwm_counter >= pwm_period)
+        if (pwm_counter >= 100)
         {
             pwm_counter = 0;
         }
-
-        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
     }
 }
-
-

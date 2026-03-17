@@ -9,6 +9,21 @@ Versionsschema: **X.Y.Z**
 
 ---
 
+## [1.2.0] - 2026/03/17
+
+### Hardware v1.0 (unverändert)
+
+### Software v1.2.0
+- Software-PWM via TIM2 Interrupt implementiert (100Hz, 100 Stufen)
+- Linear-Modus implementiert (1ms→LED AUS, 2ms→LED AN)
+- On/Off-Modus implementiert (<1.5ms→LED AUS, ≥1.5ms→LED AN)
+- **Refactoring:** RC-Eingangsmessung auf EXTI-Interrupt umgestellt (statt Polling)
+- **Bugfix:** Timer-Konfiguration für 24MHz SystemClock korrigiert
+- **Bugfix:** signal_timeout Logik korrigiert
+- AL8862 Dimming: pwm_duty=0→LED AUS, pwm_duty=100→LED AN
+
+---
+
 ## [1.1.0] - 2026-03-10
 
 ### Hardware v1.0 (unverändert)

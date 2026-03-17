@@ -11,8 +11,8 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 | **Name** | sStromDingens |
 | **Beschreibung** | RC-Signal zu PWM Konverter für 1W LED-Dimmung |
 | **Hardware Version** | 1.0 |
-| **Firmware Version** | 1.1.0 |
-| **Status** | Hardware fertig, Firmware funktionsfähig (v1.1.0) |
+| **Firmware Version** | 1.2.0 |
+| **Status** | Hardware fertig, Firmware funktionsfähig (v1.2.0) |
 | **Lizenz** | MIT |
 
 ### Versionsschema
@@ -77,7 +77,7 @@ Eingang (5V-60V LiPo 2S-3S)
 | **Architektur** | RISC-V RV32EC |
 | **Flash** | 16KB |
 | **RAM** | 2KB |
-| **Takt** | 48MHz (intern) |
+| **Takt** | 24MHz (intern) |
 
 ### Toolchain
 
@@ -91,10 +91,10 @@ Eingang (5V-60V LiPo 2S-3S)
 
 | Pin | Funktion | Beschreibung |
 |-----|----------|---------------|
-| 5 (PC4) | RC-Eingang | Input-Capture TIM1_CH4 |
+| 5 (PC4) | RC-Eingang | EXTI-Interrupt für Pulsbreitenmessung |
 | 6 (PC2) | PWM-Ausgang | Software-PWM (TIM2) → AL8862 CTRL |
 | 7 (PC1) | Mode-Jumper | GND = Linear, OFFEN = On/Off |
-| 8 (PD4) | Fail-Safe | GND = 100% bei Signalverlust |
+| 8 (PD4) | Fail-Safe | GND = LED AN bei Signalverlust |
 
 ### RC-Signal Spezifikation
 
@@ -109,10 +109,10 @@ Eingang (5V-60V LiPo 2S-3S)
 
 | Modus | Aktivierung | Verhalten |
 |-------|-------------|-----------|
-| Linear | PC1 = GND | 1ms → 0%, 2ms → 100% |
-| On/Off | PC1 = OFFEN | <1.5ms = Aus, ≥1.5ms = An |
-| Fail-Safe (100%) | PD4 = GND + Timeout | Ausgang = 100% |
-| Fail-Safe (0%) | PD4 = OFFEN + Timeout | Ausgang = 0% |
+| Linear | PC1 = GND | 1ms → LED AUS, 2ms → LED AN (proportionales Dimmen) |
+| On/Off | PC1 = OFFEN | <1.5ms → LED AUS, ≥1.5ms → LED AN |
+| Fail-Safe (AN) | PD4 = GND + Timeout | LED AN |
+| Fail-Safe (AUS) | PD4 = OFFEN + Timeout | LED AUS |
 
 ### PWM-Ausgang für AL8862
 
@@ -126,8 +126,8 @@ Eingang (5V-60V LiPo 2S-3S)
 
 | Timer | Funktion | Beschreibung |
 |-------|----------|-------------|
-| TIM1 | RC-Input | Input-Capture an CH4 für RC-Signal |
-| TIM2 | Software-PWM | ~10kHz Interrupt für PWM-Signal |
+| TIM1 | Zeitbasis | 1µs Auflösung für Pulsbreitenmessung |
+| TIM2 | Software-PWM | 10kHz Interrupt → 100Hz PWM (100 Stufen) |
 
 ---
 

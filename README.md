@@ -2,7 +2,7 @@
 
 RC-Signal zu PWM Konverter für 1W LED-Dimmung mit Konstantstromversorgung.
 
-**Firmware Version:** v1.1.0
+**Firmware Version:** v1.2.0
 
 ## Überblick
 
@@ -12,7 +12,7 @@ Dieses Projekt ermöglicht das Dimmen einer **1W LED** mittels RC-Signal (z.B. a
 
 ```
 RC-Signal (1-2ms) ──► CH32V003J4M6 ──► PWM ──► AL8862 ──► 1W LED
-     (50Hz)              (RISC-V)         (Dimmen)  ( Konstantstrom )
+     (50Hz)              (RISC-V)        (Dimmen)  (Konstantstrom)
 ```
 
 ### Konstantstrom-LED-Treiber (AL8862)
@@ -42,10 +42,10 @@ Siehe: `Hardware/KiCad/sStromDingens/production/bom.csv`
 
 | Pin | Funktion |
 |-----|----------|
-| PC4 | RC-Eingang (TIM1_CH4 Input-Capture) |
+| PC4 | RC-Eingang (EXTI-Interrupt) |
 | PC2 | PWM-Ausgang (Software-PWM via TIM2) → AL8862 CTRL |
 | PC1 | Mode-Jumper (GND = Linear, OFFEN = On/Off) |
-| PD4 | Fail-Safe-Jumper (GND = 100% bei Signalverlust) |
+| PD4 | Fail-Safe-Jumper (GND = LED AN bei Signalverlust) |
 
 ## Software
 
@@ -61,7 +61,7 @@ Siehe: `Hardware/KiCad/sStromDingens/production/bom.csv`
 
 | Parameter | Wert |
 |-----------|------|
-| Frequenz | ~100Hz (Software-PWM) |
+| Frequenz | 100Hz (Software-PWM) |
 | Spannungsbereich | 0V - 3.3V |
 | Duty-Cycle | 0% - 100% |
 
@@ -69,17 +69,17 @@ Siehe: `Hardware/KiCad/sStromDingens/production/bom.csv`
 
 | Modus | Aktivierung | Verhalten |
 |-------|-------------|-----------|
-| **Linear** | PC1 = GND | 1ms → 0%, 2ms → 100% |
-| **On/Off** | PC1 = OFFEN | <1.5ms = Aus, ≥1.5ms = An |
-| **Fail-Safe (100%)** | PD4 = GND + kein Signal | Ausgang = 100% |
-| **Fail-Safe (0%)** | PD4 = OFFEN + kein Signal | Ausgang = 0% |
+| **Linear** | PC1 = GND | 1ms → LED AUS, 2ms → LED AN (proportionales Dimmen) |
+| **On/Off** | PC1 = OFFEN | <1.5ms → LED AUS, ≥1.5ms → LED AN |
+| **Fail-Safe (AN)** | PD4 = GND + kein Signal | LED AN |
+| **Fail-Safe (AUS)** | PD4 = OFFEN + kein Signal | LED AUS |
 
 ### Timer-Nutzung
 
 | Timer | Funktion |
 |-------|----------|
-| TIM1 | RC-Input (Input-Capture an CH4) |
-| TIM2 | Software-PWM (~10kHz Interrupt) |
+| TIM1 | Zeitbasis für Pulsbreitenmessung (1µs Auflösung) |
+| TIM2 | Software-PWM (10kHz Interrupt → 100Hz PWM) |
 
 ### Build
 
