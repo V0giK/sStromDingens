@@ -11,7 +11,7 @@ Review the provided C code for the **sStromDingens** CH32V003J4M6 firmware with 
 ## Code Quality Checks
 
 - **Memory efficiency**: RAM (2KB) and flash (16KB) constraints
-- **Performance**: Minimal overhead on 48MHz RISC-V processor
+- **Performance**: Minimal overhead on 24MHz RISC-V processor
 - **Embedded best practices**: Proper ISR handling, timer/peripheral usage, register access
 - **Safety**: Buffer overflows, uninitialized variables, division by zero
 
