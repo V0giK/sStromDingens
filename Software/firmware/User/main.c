@@ -36,13 +36,13 @@
 /* RC-Signal Grenzen in Mikrosekunden */
 #define RC_MIN_US           1000    /* Minimum: 1ms Pulsbreite */
 #define RC_MAX_US           2000    /* Maximum: 2ms Pulsbreite */
-#define RC_THRESHOLD_US     1500    /* Schwellwert für On/Off-Modus */
+#define RC_THRESHOLD_US     1500    /* Schwellwert fuer On/Off-Modus */
 
 /* RC-Signal Validierungsgrenzen */
-#define RC_PULSE_MIN_VALID   800    /* Minimum für gültigen Puls (Toleranz) */
-#define RC_PULSE_MAX_VALID   2500   /* Maximum für gültigen Puls (Toleranz) */
+#define RC_PULSE_MIN_VALID   800    /* Minimum fuer gueltigen Puls (Toleranz) */
+#define RC_PULSE_MAX_VALID   2500   /* Maximum fuer gueltigen Puls (Toleranz) */
 
-/* Timeout: 500 * 100µs = 50ms ohne Signal bis Fail-Safe aktiviert wird */
+/* Timeout: 500 * 100us = 50ms ohne Signal bis Fail-Safe aktiviert wird */
 #define RC_TIMEOUT_TICKS    500
 
 /* PWM-Parameter */
@@ -52,7 +52,7 @@
 /*                            GLOBALE VARIABLEN                               */
 /*============================================================================*/
 
-/* PWM-Duty-Cycle (0-100), wird von TIM2-ISR für PWM-Ausgabe verwendet */
+/* PWM-Duty-Cycle (0-100), wird von TIM2-ISR fuer PWM-Ausgabe verwendet */
 volatile uint8_t pwm_duty = 0;
 
 /* Gemessene RC-Pulsbreite in Mikrosekunden */
@@ -73,7 +73,7 @@ volatile uint16_t rc_start_time = 0;
  * 
  * Konfiguration:
  * - PC4: RC-Eingang (IN_FLOATING, da externer 3.3V-Pegel)
- * - PC2: PWM-Ausgang (Push-Pull für AL8862 CTRL)
+ * - PC2: PWM-Ausgang (Push-Pull fuer AL8862 CTRL)
  * - PC1: Mode-Jumper (Pull-Up, GND = Linear-Modus)
  * - PD4: Fail-Safe-Jumper (Pull-Up, GND = LED AN bei Signalverlust)
  */
@@ -81,17 +81,17 @@ void GPIO_Init_Custom(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    /* GPIO-Takt und AFIO (für EXTI) aktivieren */
+    /* GPIO-Takt und AFIO (fuer EXTI) aktivieren */
     RCC_APB2PeriphClockCmd(RCC_GPIO_ENABLE | RCC_APB2Periph_AFIO, ENABLE);
 
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
-    /* RC-Eingang: IN_FLOATING da RC-Empfänger bereits 3.3V liefert */
+    /* RC-Eingang: IN_FLOATING da RC-Empfaenger bereits 3.3V liefert */
     GPIO_InitStructure.GPIO_Pin = RC_INPUT_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_Init(RC_INPUT_PORT, &GPIO_InitStructure);
 
-    /* PWM-Ausgang: Push-Pull für AL8862 CTRL-Pin */
+    /* PWM-Ausgang: Push-Pull fuer AL8862 CTRL-Pin */
     GPIO_InitStructure.GPIO_Pin = PWM_OUTPUT_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(PWM_OUTPUT_PORT, &GPIO_InitStructure);
@@ -112,12 +112,12 @@ void GPIO_Init_Custom(void)
 /*============================================================================*/
 
 /**
- * @brief Konfiguriert EXTI für RC-Signal-Erkennung
+ * @brief Konfiguriert EXTI fuer RC-Signal-Erkennung
  * 
  * EXTI-Line4 wird auf PC4 geroutet. Bei jeder Flanke (Rising und Falling)
  * wird der EXTI7_0_IRQHandler aufgerufen.
  * 
- * Interrupt-Priorität: 0 (höchste, damit RC-Signal nicht verpasst wird)
+ * Interrupt-Prioritaet: 0 (hoechste, damit RC-Signal nicht verpasst wird)
  */
 void EXTI_Init_Custom(void)
 {
@@ -134,7 +134,7 @@ void EXTI_Init_Custom(void)
     EXTI_InitStructure.EXTI_LineCmd = ENABLE;
     EXTI_Init(&EXTI_InitStructure);
 
-    /* NVIC für EXTI-Line4..0 konfigurieren */
+    /* NVIC fuer EXTI-Line4..0 konfigurieren */
     NVIC_InitStructure.NVIC_IRQChannel = EXTI7_0_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
@@ -147,12 +147,12 @@ void EXTI_Init_Custom(void)
 /*============================================================================*/
 
 /**
- * @brief Initialisiert TIM1 als Zeitbasis für Pulsbreitenmessung
+ * @brief Initialisiert TIM1 als Zeitbasis fuer Pulsbreitenmessung
  * 
  * Konfiguration:
- * - Prescaler: 24-1 → 24MHz / 24 = 1MHz = 1µs pro Tick
- * - Period: 0xFFFF → Timer läuft bis 65535, dann Overflow
- * - Auflösung: 1µs (passend für RC-Signal 1000-2000µs)
+ * - Prescaler: 24-1 -> 24MHz / 24 = 1MHz = 1us pro Tick
+ * - Period: 0xFFFF -> Timer laeuft bis 65535, dann Overflow
+ * - Aufloesung: 1us (passend fuer RC-Signal 1000-2000us)
  * 
  * TIM1 dient nur als Zeitbasis, kein Input-Capture.
  */
@@ -163,7 +163,7 @@ void TIM1_Init(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
 
     TIM_TimeBaseStructure.TIM_Period = 0xFFFF;
-    TIM_TimeBaseStructure.TIM_Prescaler = 24 - 1;   /* 1µs Auflösung bei 24MHz */
+    TIM_TimeBaseStructure.TIM_Prescaler = 24 - 1;   /* 1us Aufloesung bei 24MHz */
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
@@ -177,19 +177,19 @@ void TIM1_Init(void)
 /*============================================================================*/
 
 /**
- * @brief Initialisiert TIM2 für Software-PWM
+ * @brief Initialisiert TIM2 fuer Software-PWM
  * 
- * TIM2 erzeugt einen 10kHz Interrupt (100µs Periodendauer).
- * Der Interrupt-Handler zählt von 0 bis (PWM_STEPS-1) und erzeugt so eine 100Hz PWM
- * mit PWM_STEPS Stufen Auflösung (1% pro Stufe).
+ * TIM2 erzeugt einen 10kHz Interrupt (100us Periodendauer).
+ * Der Interrupt-Handler zaehlt von 0 bis (PWM_STEPS-1) und erzeugt so eine 100Hz PWM
+ * mit PWM_STEPS Stufen Aufloesung (1% pro Stufe).
  * 
  * Berechnung:
  * - SystemClock: 24MHz
  * - Prescaler: 0 (keine Teilung)
- * - Period: 2399 → 24MHz / 2400 = 10kHz Interrupt
+ * - Period: 2399 -> 24MHz / 2400 = 10kHz Interrupt
  * - PWM-Frequenz: 10kHz / PWM_STEPS = 100Hz
  * 
- * Interrupt-Priorität: 1 (niedriger als EXTI, damit RC-Signal Vorrang hat)
+ * Interrupt-Prioritaet: 1 (niedriger als EXTI, damit RC-Signal Vorrang hat)
  */
 void TIM2_Init(void)
 {
@@ -228,17 +228,17 @@ void TIM2_Init(void)
  * 1. System initialisieren (GPIO, EXTI, TIM1, TIM2)
  * 2. Jumper-Stati einlesen (Linear/On/Off, Fail-Safe)
  * 3. Hauptschleife:
- *    - Neues RC-Signal verarbeiten → pwm_duty berechnen
- *    - Timeout überwachen → Fail-Safe aktivieren
+ *    - Neues RC-Signal verarbeiten -> pwm_duty berechnen
+ *    - Timeout ueberwachen -> Fail-Safe aktivieren
  */
 int main(void)
 {
     uint8_t linear_mode = 0;        /* 1 = Linear-Modus, 0 = On/Off-Modus */
     uint8_t failsafe_high = 0;      /* 1 = LED AN bei Signalverlust */
     uint8_t signal_timeout = 0;     /* 1 = Kein Signal seit 50ms */
-    uint16_t no_signal_counter = 0; /* Zählt Loop-Iterationen ohne Signal */
+    uint16_t no_signal_counter = 0; /* Zaehlt Loop-Iterationen ohne Signal */
 
-    /* NVIC-Prioritätsgruppe konfigurieren */
+    /* NVIC-Prioritaetsgruppe konfigurieren */
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
     /* System initialisieren */
@@ -258,7 +258,7 @@ int main(void)
     /* PWM initial auf 0 (LED AUS) */
     pwm_duty = 0;
 
-    /* Startup-Verzögerung: 1 Sekunde warten bis System stabil */
+    /* Startup-Verzoegerung: 1 Sekunde warten bis System stabil */
     Delay_Ms(1000);
 
     /*========================================================================*/
@@ -278,8 +278,8 @@ int main(void)
             {
                 /*------------------------------------------------------------*/
                 /* LINEAR-MODUS: Proportionales Dimmen                       */
-                /* 1000µs → pwm_duty = 0         → LED AUS                   */
-                /* 2000µs → pwm_duty = PWM_STEPS → LED AN                    */
+                /* 1000us -> pwm_duty = 0         -> LED AUS                  */
+                /* 2000us -> pwm_duty = PWM_STEPS -> LED AN                   */
                 /*------------------------------------------------------------*/
                 if (rc_pulse_us <= RC_MIN_US)
                 {
@@ -299,8 +299,8 @@ int main(void)
             {
                 /*------------------------------------------------------------*/
                 /* ON/OFF-MODUS: Schwellwert-basiertes Schalten              */
-                /* < 1500µs → pwm_duty = 0         → LED AUS                 */
-                /* ≥ 1500µs → pwm_duty = PWM_STEPS → LED AN                  */
+                /* < 1500us -> pwm_duty = 0         -> LED AUS                */
+                /* >= 1500us -> pwm_duty = PWM_STEPS -> LED AN                */
                 /*------------------------------------------------------------*/
                 if (rc_pulse_us >= RC_THRESHOLD_US)
                 {
@@ -314,7 +314,7 @@ int main(void)
         }
         else
         {
-            /* Kein neues Signal: Timeout-Zähler inkrementieren */
+            /* Kein neues Signal: Timeout-Zaehler inkrementieren */
             no_signal_counter++;
             if (no_signal_counter >= RC_TIMEOUT_TICKS)
             {
@@ -326,13 +326,13 @@ int main(void)
         {
             /*------------------------------------------------------------*/
             /* FAIL-SAFE: Bei Signalverlust LED auf definierten Zustand  */
-            /* failsafe_high = 1 (PD4=GND) → pwm_duty = PWM_STEPS → LED AN */
-            /* failsafe_high = 0 (PD4=OFFEN) → pwm_duty = 0 → LED AUS    */
+            /* failsafe_high = 1 (PD4=GND) -> pwm_duty = PWM_STEPS -> LED AN */
+            /* failsafe_high = 0 (PD4=OFFEN) -> pwm_duty = 0 -> LED AUS   */
             /*------------------------------------------------------------*/
             pwm_duty = failsafe_high ? PWM_STEPS : 0;
         }
 
-        /* Loop-Verzögerung: 100µs */
+        /* Loop-Verzoegerung: 100us */
         Delay_Us(100);
     }
 }

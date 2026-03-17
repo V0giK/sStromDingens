@@ -41,7 +41,7 @@ extern volatile uint16_t rc_start_time;
 /*                            LOKALE VARIABLEN                                */
 /*============================================================================*/
 
-/* Zähler für Software-PWM: 0-99, dann Reset */
+/* Zaehler fuer Software-PWM: 0-99, dann Reset */
 static uint8_t pwm_counter = 0;
 
 /*============================================================================*/
@@ -78,8 +78,8 @@ void NMI_Handler(void)
  * @brief Hard Fault Handler
  * 
  * Wird bei kritischen Fehlern aufgerufen (z.B. Stack-Overflow,
- * ungültiger Speicherzugriff).
- * Führt einen System-Reset durch.
+ * ungueltiger Speicherzugriff).
+ * Fuehrt einen System-Reset durch.
  */
 void HardFault_Handler(void)
 {
@@ -103,15 +103,15 @@ void HardFault_Handler(void)
  * - Falling Edge: Berechnet die Pulsbreite und speichert sie in rc_pulse_us
  * 
  * Pulsbreitenmessung:
- * - TIM1 läuft mit 1MHz (1µs pro Tick)
- * - Gültige Pulse: RC_PULSE_MIN_VALID - RC_PULSE_MAX_VALID
- * - Bei gültigem Puls wird rc_new_data = 1 gesetzt
+ * - TIM1 laeuft mit 1MHz (1us pro Tick)
+ * - Gueltige Pulse: RC_PULSE_MIN_VALID - RC_PULSE_MAX_VALID
+ * - Bei gueltigem Puls wird rc_new_data = 1 gesetzt
  */
 void EXTI7_0_IRQHandler(void)
 {
     if (EXTI_GetITStatus(EXTI_Line4) != RESET)
     {
-        /* Interrupt-Flag löschen */
+        /* Interrupt-Flag loeschen */
         EXTI_ClearITPendingBit(EXTI_Line4);
 
         if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_4))
@@ -144,8 +144,8 @@ void EXTI7_0_IRQHandler(void)
 
             /*------------------------------------------------------------*/
             /* Puls validieren                                            */
-            /* Gültig: RC_PULSE_MIN_VALID bis RC_PULSE_MAX_VALID µs      */
-            /* Bei gültigem Puls: Daten übernehmen und Flag setzen       */
+            /* Gueltig: RC_PULSE_MIN_VALID bis RC_PULSE_MAX_VALID us     */
+            /* Bei gueltigem Puls: Daten uebernehmen und Flag setzen     */
             /*------------------------------------------------------------*/
             if (diff >= RC_PULSE_MIN_VALID && diff <= RC_PULSE_MAX_VALID)
             {
@@ -163,11 +163,11 @@ void EXTI7_0_IRQHandler(void)
 /**
  * @brief TIM2 Update Interrupt Handler
  * 
- * Erzeugt eine 100Hz Software-PWM mit PWM_STEPS Stufen (1% Auflösung).
+ * Erzeugt eine 100Hz Software-PWM mit PWM_STEPS Stufen (1% Aufloesung).
  * 
  * Funktionsweise:
- * - TIM2 Interrupt alle 100µs (10kHz)
- * - pwm_counter zählt von 0 bis (PWM_STEPS-1)
+ * - TIM2 Interrupt alle 100us (10kHz)
+ * - pwm_counter zaehlt von 0 bis (PWM_STEPS-1)
  * - Wenn counter < duty: PWM-Pin HIGH
  * - Wenn counter >= duty: PWM-Pin LOW
  * 
@@ -180,7 +180,7 @@ void TIM2_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
     {
-        /* Interrupt-Flag löschen */
+        /* Interrupt-Flag loeschen */
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 
         /*------------------------------------------------------------*/
@@ -200,7 +200,7 @@ void TIM2_IRQHandler(void)
 
         /*------------------------------------------------------------*/
         /* COUNTER AKTUALISIEREN                                      */
-        /* Nach PWM_STEPS Schritten Reset (100 * 100µs = 10ms = 100Hz) */
+        /* Nach PWM_STEPS Schritten Reset (100 * 100us = 10ms = 100Hz) */
         /*------------------------------------------------------------*/
         pwm_counter++;
         if (pwm_counter >= PWM_STEPS)
