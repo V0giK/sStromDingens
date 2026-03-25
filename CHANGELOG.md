@@ -9,6 +9,20 @@ Versionsschema: **X.Y.Z**
 
 ---
 
+## [2.2.0] - 2026/03/25
+
+### Hardware v2.0
+- Layout ueberarbeitet und optimiert
+- TVS-Dioden hinzugefuegt: SMF3.3CA (x2) fuer Eingangsschutz, SMAJ26CA fuer LED-Ausgang
+- Ueberspannungsschutz SMAJ15A entfernt (D4, D5)
+- Failsafe-Jumper von Pin 8 (PD4) auf Pin 1 (PD6) geaendert
+
+### Software v2.0.0
+- Failsafe-Pin von PD4 (Pin 8) auf PD6 (Pin 1) geaendert
+- Hardware-Kompatibilitaet: Nur fuer Hardware v2.0
+
+---
+
 ## [1.2.0] - 2026/03/17
 
 ### Hardware v1.0 (unverändert)

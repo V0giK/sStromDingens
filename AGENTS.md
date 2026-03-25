@@ -10,10 +10,10 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 |-------------|------|
 | **Name** | sStromDingens |
 | **Beschreibung** | RC-Signal zu PWM Konverter für 1W LED-Dimmung |
-| **Hardware Version** | 1.0 |
-| **Firmware Version** | 1.2.0 |
+| **Hardware Version** | 2.0 |
+| **Firmware Version** | 2.0.0 |
 | **Status** | Hardware fertig, Firmware funktionsfähig (v1.2.0) |
-| **Lizenz** | MIT |
+| **Lizenz** | GPLv3 |
 
 ### Versionsschema
 
@@ -50,7 +50,8 @@ Eingang (5V-60V LiPo 2S-3S)
 | U3 | AMS1117-3.3 | 3.3V Spannungsregler |
 | L1 | 15uH SMD | Induktor für Step-Down |
 | D1, D7 | SS24 | Gleichrichter |
-| D4, D5 | SMAJ15A | Überspannungsschutz |
+| D3, D6 | SMF3.3CA | TVS-Diode (Schutz) |
+| D8 | SMAJ26CA | TVS-Diode (Schutz) |
 | C4 | 22uF 10V | Eingangs-Elko |
 | C5 | 10uF 25V | Ausgangs-Elko |
 
@@ -91,10 +92,10 @@ Eingang (5V-60V LiPo 2S-3S)
 
 | Pin | Funktion | Beschreibung |
 |-----|----------|---------------|
-| 5 (PC4) | RC-Eingang | EXTI-Interrupt für Pulsbreitenmessung |
+| 5 (PC1) | Mode-Jumper | GND = Linear, OFFEN = On/Off |
 | 6 (PC2) | PWM-Ausgang | Software-PWM (TIM2) → AL8862 CTRL |
-| 7 (PC1) | Mode-Jumper | GND = Linear, OFFEN = On/Off |
-| 8 (PD4) | Fail-Safe | GND = LED AN bei Signalverlust |
+| 7 (PC4) | RC-Eingang | EXTI-Interrupt für Pulsbreitenmessung |
+| 1 (PD6) | Fail-Safe | GND = LED AN bei Signalverlust |
 
 ### RC-Signal Spezifikation
 
@@ -189,7 +190,8 @@ riscv-none-embed-gcc -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-secti
 sStromDingens/
 ├── AGENTS.md           # Diese Datei
 ├── README.md           # Benutzer-Doku
-├── LICENSE             # MIT Lizenz
+├── CHANGELOG.md        # Aenderungshistorie
+├── LICENSE             # GPLv3 Lizenz
 ├── Hardware/
 │   ├── Documents/      # Datasheets
 │   └── KiCad/

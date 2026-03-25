@@ -40,8 +40,8 @@ sStromDingens/
 │       ├── Core/           # RISC-V Core
 │       ├── Peripheral/     # HAL Treiber
 │       ├── Debug/          # Debug-Funktionen
-│       ├── Startup/        # Startup-Code
-│       └── Ld/             # Linker-Skript
+│       ├── Startup/       # Startup-Code
+│       └── Ld/            # Linker-Skript
 ├── .github/
 │   └── prompts/            # AI-Prompts fuer Code-Review
 ├── AGENTS.md               # KI-Entwicklungsdokumentation
@@ -60,6 +60,8 @@ sStromDingens/
 | CH32V003J4M6 | RISC-V Mikrocontroller (SOP-8, 24MHz) |
 | AMS1117-3.3 | 3.3V Spannungsregler |
 | 15uH Induktor | Fuer Step-Down Wandler |
+| SMF3.3CA (x2) | TVS-Diode (Schutz) |
+| SMAJ26CA | TVS-Diode (Schutz) |
 
 ---
 
@@ -69,10 +71,10 @@ sStromDingens/
 
 | Pin | Funktion |
 |-----|----------|
-| PC4 | RC-Eingang (EXTI-Interrupt) |
-| PC2 | PWM-Ausgang (Software-PWM via TIM2) -> AL8862 CTRL |
-| PC1 | Mode-Jumper (GND = Linear, OFFEN = On/Off) |
-| PD4 | Fail-Safe-Jumper (GND = LED AN bei Signalverlust) |
+| PC1 (Pin 5) | Mode-Jumper (GND = Linear, OFFEN = On/Off) |
+| PC2 (Pin 6) | PWM-Ausgang (Software-PWM via TIM2) -> AL8862 CTRL |
+| PC4 (Pin 7) | RC-Eingang (EXTI-Interrupt) |
+| PD6 (Pin 1) | Fail-Safe-Jumper (GND = LED AN bei Signalverlust) |
 
 ### Timer-Nutzung
 
