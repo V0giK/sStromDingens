@@ -31,7 +31,7 @@ Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
 ### Schaltung
 
 ```
-Eingang (5V-60V LiPo 2S-3S)
+Eingang (5V-26V, AMS1117 begrenzt auf LiPo 2S-3S)
     │
     ├─► AMS1117-3.3V ──► CH32V003J4M6 (MCU)
     │

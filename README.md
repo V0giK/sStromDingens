@@ -20,7 +20,7 @@ RC-Signal (1-2ms) ──► CH32V003J4M6 ──► PWM ──► AL8862 ──�
 - **Zwei Betriebsmodi**: Linear (proportionales Dimmen) und On/Off (Schwellwert-basiert)
 - **Fail-Safe**: Konfigurierbares Verhalten bei Signalverlust
 - **100Hz PWM**: Software-PWM mit 100 Stufen Aufloesung
-- **Eingangsspannung**: 5V - 26V (LiPo 2S-6S) (nach Spezifikation des Spannungsreglers max. 3S LiPo)
+- **Eingangsspannung**: 5V - 26V moeglich, AMS1117-3.3 begrenzt auf LiPo 2S-3S (max. 12.6V)
 - **Kompaktes Design**: SOP-8 Package, minimaler Platzbedarf
 
 ---
