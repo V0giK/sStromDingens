@@ -91,7 +91,7 @@ volatile uint16_t rc_start_time = 0;
  * - PC4: RC-Eingang (IN_FLOATING, da externer 3.3V-Pegel)
  * - PC2: PWM-Ausgang (Push-Pull fuer AL8862 CTRL)
  * - PC1: Mode-Jumper (Pull-Up, GND = Linear-Modus)
- * - PD4: Fail-Safe-Jumper (Pull-Up, GND = LED AN bei Signalverlust)
+ * - PD6: Fail-Safe-Jumper (Pull-Up, GND = LED AN bei Signalverlust)
  */
 void GPIO_Init_Custom(void)
 {
@@ -342,8 +342,8 @@ int main(void)
         {
             /*------------------------------------------------------------*/
             /* FAIL-SAFE: Bei Signalverlust LED auf definierten Zustand  */
-            /* failsafe_high = 1 (PD4=GND) -> pwm_duty = PWM_STEPS -> LED AN */
-            /* failsafe_high = 0 (PD4=OFFEN) -> pwm_duty = 0 -> LED AUS   */
+            /* failsafe_high = 1 (PD6=GND) -> pwm_duty = PWM_STEPS -> LED AN */
+            /* failsafe_high = 0 (PD6=OFFEN) -> pwm_duty = 0 -> LED AUS   */
             /*------------------------------------------------------------*/
             pwm_duty = failsafe_high ? PWM_STEPS : 0;
         }

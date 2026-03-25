@@ -27,10 +27,10 @@ Verify against project coding standards:
 ## Hardware Context Checks
 
 Review based on pinout and peripheral assignment:
-- **RC Input**: PC4 (TIM1_CH4) for input-capture
+- **RC Input**: PC4 (EXTI-Interrupt) für Pulsbreitenmessung
 - **PWM Output**: PC2 (TIM2) for software PWM to AL8862 LED driver
 - **Mode Jumper**: PC1 (selects Linear vs On/Off mode)
-- **Fail-Safe**: PD4 (determines behavior on RC signal loss)
+- **Fail-Safe**: PD6 (Pin 1, bestimmt Verhalten bei Signalverlust)
 
 ## Specific Review Points
 
