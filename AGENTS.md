@@ -12,7 +12,7 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 | **Beschreibung** | RC-Signal zu PWM Konverter für 1W LED-Dimmung |
 | **Hardware Version** | 2.0 |
 | **Firmware Version** | 2.0.0 |
-| **Status** | Hardware fertig, Firmware funktionsfähig (v1.2.0) |
+| **Status** | Hardware fertig, Firmware fertig (v2.0.0) |
 | **Lizenz** | GPLv3 |
 
 ### Versionsschema
