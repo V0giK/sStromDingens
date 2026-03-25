@@ -6,6 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "sStromDingens")
+		(rev "2.0")
 	)
 	(lib_symbols
 		(symbol "#partdb:100nF 25V X7R 0805"
@@ -1958,6 +1959,267 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "#partdb:SMAJ26CA"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SMAJ26CA"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Diode_SMD:D_SMB"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "http://192.168.1.200:20010/de/part/74/info"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "5V, 450W Discrete Bidirectional TVS Diode, SOD-323"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Category" "Elektronik/passiv/diode"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "Littelfuse"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "SMAJ26CA"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturing Status" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Part-DB Footprint" "DO-214AA"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Mass" "0.124 g"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Part-DB ID" "74"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC SPN" "C148226"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "manf" "Littelfuse"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "manf#" "SMAJ26CA"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "lcsc#" "C148226"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "transient voltage suppressor thyrector transil"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Diode_SMD:D_SMB"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SMAJ26CA_0_1"
+				(polyline
+					(pts
+						(xy -2.54 -1.27) (xy 0 0) (xy -2.54 1.27) (xy -2.54 -1.27)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.508 1.27) (xy 0 1.27) (xy 0 -1.27) (xy -0.508 -1.27)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 0) (xy -1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.27) (xy 2.54 -1.27) (xy 0 0) (xy 2.54 1.27)
+					)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SMAJ26CA_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "A1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "#partdb:TVS SMF3.3CA bi-direktional"
 			(pin_numbers
 				(hide yes)
@@ -3040,144 +3302,6 @@
 					(at 0 -3.81 90)
 					(length 1.27)
 					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Diode:SMAJ15A"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 1.016)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "D"
-				(at 0 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "SMAJ15A"
-				(at 0 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" "Diode_SMD:D_SMA"
-				(at 0 -5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-				(at -1.27 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "400W unidirectional Transient Voltage Suppressor, 15.0Vr, SMA(DO-214AC)"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "unidirectional diode TVS voltage suppressor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "D*SMA*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "SMAJ15A_0_1"
-				(polyline
-					(pts
-						(xy -0.762 1.27) (xy -1.27 1.27) (xy -1.27 -1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "SMAJ15A_1_1"
-				(pin passive line
-					(at -3.81 0 0)
-					(length 2.54)
-					(name "A1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 3.81 0 180)
-					(length 2.54)
-					(name "A2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4431,7 +4555,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 90.17) (xy 110.49 86.36)
+			(xy 107.95 90.17) (xy 107.95 88.9)
 		)
 		(stroke
 			(width 0)
@@ -4591,6 +4715,16 @@
 	)
 	(wire
 		(pts
+			(xy 100.33 77.47) (xy 107.95 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3c8a8660-acc9-4733-bd48-e1d4d2d34697")
+	)
+	(wire
+		(pts
 			(xy 243.84 68.58) (xy 243.84 76.2)
 		)
 		(stroke
@@ -4618,6 +4752,16 @@
 			(type default)
 		)
 		(uuid "457c0bef-0fd3-4cfa-80c5-6ac62c0be500")
+	)
+	(wire
+		(pts
+			(xy 107.95 80.01) (xy 107.95 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4ab96b96-960f-4e09-8744-13def8b77456")
 	)
 	(wire
 		(pts
@@ -4658,6 +4802,16 @@
 			(type default)
 		)
 		(uuid "55e540fb-4607-44c7-ad42-4f7bbd0faebd")
+	)
+	(wire
+		(pts
+			(xy 99.06 158.75) (xy 102.87 158.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "57f28a1b-fdd7-4713-a10c-66024eb4a523")
 	)
 	(wire
 		(pts
@@ -4738,16 +4892,6 @@
 			(type default)
 		)
 		(uuid "6a0dc25a-b00e-4a62-accc-2a8c5d91df4f")
-	)
-	(wire
-		(pts
-			(xy 110.49 77.47) (xy 110.49 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6a130950-63d2-4b54-b07f-4abac519aaf8")
 	)
 	(wire
 		(pts
@@ -4851,7 +4995,7 @@
 	)
 	(wire
 		(pts
-			(xy 49.53 160.02) (xy 53.34 160.02)
+			(xy 72.39 157.48) (xy 76.2 157.48)
 		)
 		(stroke
 			(width 0)
@@ -4918,6 +5062,16 @@
 			(type default)
 		)
 		(uuid "964510e5-73bd-4fe0-a372-a642f4f826d5")
+	)
+	(wire
+		(pts
+			(xy 152.4 73.66) (xy 152.4 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "97295005-0e8a-45a4-b348-5f1f82450265")
 	)
 	(wire
 		(pts
@@ -4991,16 +5145,6 @@
 	)
 	(wire
 		(pts
-			(xy 100.33 77.47) (xy 110.49 77.47)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a15db6b9-035b-4dba-a3dc-097e778cfeea")
-	)
-	(wire
-		(pts
 			(xy 147.32 71.12) (xy 147.32 81.28)
 		)
 		(stroke
@@ -5071,7 +5215,7 @@
 	)
 	(wire
 		(pts
-			(xy 49.53 153.67) (xy 53.34 153.67)
+			(xy 48.26 158.75) (xy 52.07 158.75)
 		)
 		(stroke
 			(width 0)
@@ -5088,6 +5232,16 @@
 			(type default)
 		)
 		(uuid "bc35766d-c3c4-49cf-b6ce-8d38ab1ddc1b")
+	)
+	(wire
+		(pts
+			(xy 152.4 59.69) (xy 152.4 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bfc153f6-dbde-428d-a987-d74978b8f4a4")
 	)
 	(wire
 		(pts
@@ -5151,16 +5305,6 @@
 	)
 	(wire
 		(pts
-			(xy 152.4 62.23) (xy 152.4 59.69)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d3e3cfb7-cdca-4819-aa8c-8d4698932e64")
-	)
-	(wire
-		(pts
 			(xy 243.84 83.82) (xy 240.03 83.82)
 		)
 		(stroke
@@ -5171,7 +5315,7 @@
 	)
 	(wire
 		(pts
-			(xy 100.33 80.01) (xy 105.41 80.01)
+			(xy 100.33 80.01) (xy 107.95 80.01)
 		)
 		(stroke
 			(width 0)
@@ -5261,16 +5405,6 @@
 	)
 	(wire
 		(pts
-			(xy 152.4 77.47) (xy 152.4 81.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f08899a5-162d-49df-a723-b7fc83b286cc")
-	)
-	(wire
-		(pts
 			(xy 81.28 119.38) (xy 88.9 119.38)
 		)
 		(stroke
@@ -5350,7 +5484,7 @@
 		(uuid "06259411-a9ea-40b0-ab5a-f70e1d0c160d")
 	)
 	(label "SWIO"
-		(at 49.53 153.67 0)
+		(at 48.26 158.75 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5450,14 +5584,14 @@
 		(uuid "b154670a-ea3c-41c7-a7bf-7567c4f21fe9")
 	)
 	(label "SWIO"
-		(at 105.41 80.01 180)
+		(at 107.95 77.47 180)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify right bottom)
 		)
-		(uuid "c95490db-46ff-41c4-8b06-4e2a436ef7a8")
+		(uuid "e1c38923-1755-420c-8df3-1d4981bb799c")
 	)
 	(label "EP"
 		(at 201.93 71.12 180)
@@ -5690,7 +5824,7 @@
 	)
 	(symbol
 		(lib_id "Jumper:SolderJumper_2_Open")
-		(at 110.49 82.55 90)
+		(at 107.95 85.09 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
@@ -5698,7 +5832,7 @@
 		(dnp no)
 		(uuid "06936212-532b-4ab4-b84d-b83c130749d2")
 		(property "Reference" "JP2"
-			(at 106.68 80.264 90)
+			(at 104.14 82.804 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5707,7 +5841,7 @@
 			)
 		)
 		(property "Value" "Failsafe Off"
-			(at 113.284 76.454 0)
+			(at 110.744 78.994 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5716,7 +5850,7 @@
 			)
 		)
 		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm"
-			(at 110.49 82.55 0)
+			(at 107.95 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5725,7 +5859,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 110.49 82.55 0)
+			(at 107.95 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5734,7 +5868,7 @@
 			)
 		)
 		(property "Description" "Solder Jumper, 2-pole, open"
-			(at 110.49 82.55 0)
+			(at 107.95 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6534,6 +6668,72 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 102.87 158.75 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2f2974a5-120d-4011-aeb7-90ded7fbd8db")
+		(property "Reference" "TP3"
+			(at 108.966 158.242 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "3V3"
+			(at 108.458 160.274 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 102.87 163.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 102.87 163.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "test point"
+			(at 102.87 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0590b548-1fd2-4aa3-bd28-c5c7cd089fcd")
+		)
+		(instances
+			(project "sStromDingens"
+				(path "/f3392d6f-8e75-4a7f-987d-083f92f8eb48"
+					(reference "TP3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "#partdb:22uF 10V Tantalum CASE-A-3216-16")
 		(at 72.39 125.73 0)
 		(unit 1)
@@ -6854,7 +7054,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LiPo- (2S-3S)"
+		(property "Value" "LiPo- (2S-6S)"
 			(at 138.684 72.39 0)
 			(effects
 				(font
@@ -6902,78 +7102,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Diode:SMAJ15A")
-		(at 152.4 73.66 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "4c61fb16-8194-486e-aeef-724b4e718bc8")
-		(property "Reference" "D4"
-			(at 154.94 72.3899 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "SMAJ15A"
-			(at 154.94 74.9299 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 147.32 73.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 152.4 72.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 15.0Vr, SMA(DO-214AC)"
-			(at 152.4 73.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "4ae1a31b-9c89-4461-9029-aac0d3991e07")
-		)
-		(pin "1"
-			(uuid "892080fe-3a10-4536-806a-d5b2f45ed81b")
-		)
-		(instances
-			(project ""
-				(path "/f3392d6f-8e75-4a7f-987d-083f92f8eb48"
-					(reference "D4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 53.34 153.67 270)
+		(at 52.07 158.75 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6981,7 +7111,7 @@
 		(dnp no)
 		(uuid "4cb134f9-9434-44b5-8c8b-fed01ac6e3ef")
 		(property "Reference" "TP1"
-			(at 59.436 152.908 90)
+			(at 58.166 157.988 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6990,7 +7120,7 @@
 			)
 		)
 		(property "Value" "SWIO"
-			(at 58.928 154.94 90)
+			(at 57.658 160.02 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6999,7 +7129,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 53.34 158.75 0)
+			(at 52.07 163.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7008,7 +7138,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 53.34 158.75 0)
+			(at 52.07 163.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7017,7 +7147,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 53.34 153.67 0)
+			(at 52.07 158.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8023,7 +8153,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 110.49 90.17 0)
+		(at 107.95 90.17 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8032,7 +8162,7 @@
 		(fields_autoplaced yes)
 		(uuid "8a17f304-a7c0-4a07-ac07-0cba9f6415f6")
 		(property "Reference" "#PWR012"
-			(at 110.49 96.52 0)
+			(at 107.95 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8041,7 +8171,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 110.49 95.25 0)
+			(at 107.95 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8049,7 +8179,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 110.49 90.17 0)
+			(at 107.95 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8058,7 +8188,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 110.49 90.17 0)
+			(at 107.95 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8067,7 +8197,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 110.49 90.17 0)
+			(at 107.95 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8349,6 +8479,72 @@
 			(project "sStromDingens"
 				(path "/f3392d6f-8e75-4a7f-987d-083f92f8eb48"
 					(reference "J7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 99.06 158.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a50770f3-7910-442a-8de7-c52d80553ab6")
+		(property "Reference" "#PWR015"
+			(at 99.06 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 99.06 153.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 99.06 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 99.06 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4e375137-f520-445b-ac8c-0720223f72b9")
+		)
+		(instances
+			(project "sStromDingens"
+				(path "/f3392d6f-8e75-4a7f-987d-083f92f8eb48"
+					(reference "#PWR015")
 					(unit 1)
 				)
 			)
@@ -8706,7 +8902,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LiPo+ (2S-3S)"
+		(property "Value" "LiPo+ (2S-6S)"
 			(at 138.176 66.294 0)
 			(effects
 				(font
@@ -8755,7 +8951,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 53.34 160.02 270)
+		(at 76.2 157.48 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8763,7 +8959,7 @@
 		(dnp no)
 		(uuid "c812fc3e-238f-4c93-bd69-eac47914d49c")
 		(property "Reference" "TP2"
-			(at 59.436 159.512 90)
+			(at 82.296 156.972 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8772,7 +8968,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 58.928 161.544 90)
+			(at 81.788 159.004 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8781,7 +8977,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 53.34 165.1 0)
+			(at 76.2 162.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8790,7 +8986,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 53.34 165.1 0)
+			(at 76.2 162.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8799,7 +8995,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 53.34 160.02 0)
+			(at 76.2 157.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9154,6 +9350,184 @@
 		)
 	)
 	(symbol
+		(lib_id "#partdb:SMAJ26CA")
+		(at 152.4 69.85 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "cf9ff215-6fdc-42ff-bc9d-ceab7b65d295")
+		(property "Reference" "D8"
+			(at 154.94 68.5799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "SMAJ26CA"
+			(at 154.94 71.1199 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SMB"
+			(at 147.32 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://192.168.1.200:20010/de/part/74/info"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "5V, 450W Discrete Bidirectional TVS Diode, SOD-323"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Category" "Elektronik/passiv/diode"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Littelfuse"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SMAJ26CA"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturing Status" ""
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Part-DB Footprint" "DO-214AA"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mass" "0.124 g"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Part-DB ID" "74"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC SPN" "C148226"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "manf" "Littelfuse"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "manf#" "SMAJ26CA"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "lcsc#" "C148226"
+			(at 152.4 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C148226"
+			(at 152.4 69.85 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "d383fbb0-6736-479a-916f-e0ffc1cc727a")
+		)
+		(pin "1"
+			(uuid "f3f6ecc0-71ba-4db1-b00a-162e80f43209")
+		)
+		(instances
+			(project ""
+				(path "/f3392d6f-8e75-4a7f-987d-083f92f8eb48"
+					(reference "D8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:VCC")
 		(at 49.53 118.11 0)
 		(unit 1)
@@ -9214,76 +9588,6 @@
 			(project "sStromDingens"
 				(path "/f3392d6f-8e75-4a7f-987d-083f92f8eb48"
 					(reference "#PWR011")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Diode:SMAJ15A")
-		(at 152.4 66.04 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "e4cd7487-038c-41f6-8b66-e51c221a13b8")
-		(property "Reference" "D5"
-			(at 154.94 64.7699 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "SMAJ15A"
-			(at 154.94 67.3099 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 157.48 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
-			(at 152.4 67.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "400W unidirectional Transient Voltage Suppressor, 15.0Vr, SMA(DO-214AC)"
-			(at 152.4 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "151db259-036c-47bf-bbb5-e2f43a437714")
-		)
-		(pin "1"
-			(uuid "1f1d917d-e00d-4396-8e8c-4f2bc7a84780")
-		)
-		(instances
-			(project "sStromDingens"
-				(path "/f3392d6f-8e75-4a7f-987d-083f92f8eb48"
-					(reference "D5")
 					(unit 1)
 				)
 			)
@@ -9423,7 +9727,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 49.53 160.02 0)
+		(at 72.39 157.48 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9432,7 +9736,7 @@
 		(fields_autoplaced yes)
 		(uuid "f024f2d1-ab49-4baf-aaf1-84b6d1a3f72b")
 		(property "Reference" "#PWR014"
-			(at 49.53 166.37 0)
+			(at 72.39 163.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9441,7 +9745,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 49.53 165.1 0)
+			(at 72.39 162.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9449,7 +9753,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 49.53 160.02 0)
+			(at 72.39 157.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9458,7 +9762,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 49.53 160.02 0)
+			(at 72.39 157.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9467,7 +9771,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 49.53 160.02 0)
+			(at 72.39 157.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
