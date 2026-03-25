@@ -19,7 +19,7 @@
  *
  * File Name          : main.c
  * Author             : V0giK
- * Version            : V1.2.0
+ * Version            : V2.0.0
  * Date               : 2026/03/17
  * Description        : RC-Signal to AL8862 PWM converter (EXTI + TIM2)
  */
@@ -42,7 +42,7 @@
 #define MODE_JUMPER_PIN     GPIO_Pin_1
 #define MODE_JUMPER_PORT   GPIOC
 
-#define FAILSAFE_JUMPER_PIN    GPIO_Pin_4
+#define FAILSAFE_JUMPER_PIN    GPIO_Pin_6
 #define FAILSAFE_JUMPER_PORT   GPIOD
 
 /*============================================================================*/
