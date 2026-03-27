@@ -112,8 +112,8 @@ Eingang (5V-26V, AMS1117 begrenzt auf LiPo 2S-3S)
 |-------|-------------|-----------|
 | Linear | PC1 = GND | 1ms → LED AUS, 2ms → LED AN (proportionales Dimmen) |
 | On/Off | PC1 = OFFEN | <1.5ms → LED AUS, ≥1.5ms → LED AN |
-| Fail-Safe (AN) | PD4 = GND + Timeout | LED AN |
-| Fail-Safe (AUS) | PD4 = OFFEN + Timeout | LED AUS |
+| Fail-Safe (AN) | PD6 = GND + Timeout | LED AN |
+| Fail-Safe (AUS) | PD6 = OFFEN + Timeout | LED AUS |
 
 ### PWM-Ausgang für AL8862
 
@@ -188,24 +188,29 @@ riscv-none-embed-gcc -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-secti
 
 ```
 sStromDingens/
-├── AGENTS.md           # Diese Datei
-├── README.md           # Benutzer-Doku
+├── AGENTS.md           # KI-Entwicklungsdokumentation
+├── README.md           # Dokumentation (Deutsch)
+├── README_EN.md        # Dokumentation (English)
 ├── CHANGELOG.md        # Aenderungshistorie
 ├── LICENSE             # GPLv3 Lizenz
 ├── Hardware/
 │   ├── Documents/      # Datasheets
 │   └── KiCad/
 │       └── sStromDingens/
-│           ├── production/    # Fertigungsdaten
+│           ├── production/    # Fertigungsdaten (Gerber, BOM)
 │           └── *.kicad_*      # KiCad Projekt
-└── Software/
-    └── firmware/
-        ├── User/       # Anwendungscode
-        ├── Core/       # RISC-V Core
-        ├── Peripheral/ # HAL Treiber
-        ├── Debug/      # Debug-Funktionen
-        ├── Startup/    # Startup-Code
-        └── Ld/         # Linker-Skript
+├── Software/
+│   └── firmware/
+│       ├── User/       # Anwendungscode
+│       ├── Core/       # RISC-V Core
+│       ├── Peripheral/ # HAL Treiber
+│       ├── Debug/      # Debug-Funktionen
+│       ├── Startup/    # Startup-Code
+│       └── Ld/         # Linker-Skript
+├── images/             # Bilder für README
+│   └── original/       # Originale (vor Skalierung)
+└── .github/
+    └── prompts/        # AI-Prompts für Code-Review
 ```
 
 ---
