@@ -85,6 +85,14 @@ sStromDingens/
 
 ---
 
+## 📸 Hardware-Bilder
+
+| Top | PCB | Bottom |
+|-----|-----|--------|
+| ![Top](images/sStromDingens1_0_T.jpg) | ![PCB](images/sStromDingens1_0_PCB.jpg) | ![Bottom](images/sStromDingens1_0_B.jpg) |
+
+---
+
 ## 💻 Software
 
 ### RC-Signal Spezifikation
