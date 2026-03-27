@@ -1,4 +1,4 @@
-# sStromDingens – RC-Signal zu PWM Konverter
+# sStromDingens – Einfache 1W LED-Beleuchtung per RC-Signal
 
 ---
 
