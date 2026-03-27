@@ -8,8 +8,8 @@
 
 **Eine Platine – zwei Möglichkeiten:**
 
-| Modus | Jumper PC1 | Anwendung |
-|-------|------------|-----------|
+| Modus | Lötjumper DIM | Anwendung |
+|-------|----------------|-----------|
 | 🌗 **Dimmen** | Geschlossen | Scheinwerfer, dimmbare Lampen |
 | 💡 **Ein/Aus** | Offen | Rücklichter, Positionslichter |
 
@@ -85,10 +85,10 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 
 | Pin | Funktion | Beschreibung |
 |-----|----------|--------------|
-| PC1 (Pin 5) | Mode-Jumper | GND = Linear, OFFEN = On/Off |
+| PC1 (Pin 5) | Lötjumper DIM (Mode) | Geschlossen = Linear, Offen = On/Off |
 | PC2 (Pin 6) | PWM-Ausgang | → AL8862 CTRL |
 | PC4 (Pin 7) | RC-Eingang | EXTI-Interrupt |
-| PD6 (Pin 1) | Fail-Safe | GND = LED AN bei Signalverlust |
+| PD6 (Pin 1) | Lötjumper ON (Fail-Safe) | Geschlossen = LED AN bei Signalverlust |
 
 ### Timer-Nutzung
 
@@ -127,10 +127,10 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 
 | Modus | Aktivierung | Verhalten |
 |-------|-------------|-----------|
-| **Linear** | PC1 = GND | 1ms → AUS, 2ms → AN (dimmen) |
-| **On/Off** | PC1 = OFFEN | <1.5ms → AUS, ≥1.5ms → AN |
-| **Fail-Safe AN** | PD6 = GND + Timeout | LED an |
-| **Fail-Safe AUS** | PD6 = OFFEN + Timeout | LED aus |
+| **Linear** | DIM geschlossen | 1ms → AUS, 2ms → AN (dimmen) |
+| **On/Off** | DIM offen | <1.5ms → AUS, ≥1.5ms → AN |
+| **Fail-Safe AN** | ON geschlossen + Timeout | LED an |
+| **Fail-Safe AUS** | ON offen + Timeout | LED aus |
 
 ### Firmware Build
 

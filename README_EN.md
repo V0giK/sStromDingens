@@ -8,8 +8,8 @@
 
 **One board – two options:**
 
-| Mode | Jumper PC1 | Application |
-|------|------------|-------------|
+| Mode | Solder Jumper DIM | Application |
+|------|-------------------|-------------|
 | 🌗 **Dimming** | Closed | Headlights, dimmable lamps |
 | 💡 **On/Off** | Open | Tail lights, position lights |
 
@@ -85,10 +85,10 @@ For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in par
 
 | Pin | Function | Description |
 |-----|----------|-------------|
-| PC1 (Pin 5) | Mode jumper | GND = Linear, OPEN = On/Off |
+| PC1 (Pin 5) | Solder Jumper DIM (Mode) | Closed = Linear, Open = On/Off |
 | PC2 (Pin 6) | PWM output | → AL8862 CTRL |
 | PC4 (Pin 7) | RC input | EXTI interrupt |
-| PD6 (Pin 1) | Fail-Safe | GND = LED ON on signal loss |
+| PD6 (Pin 1) | Solder Jumper ON (Fail-Safe) | Closed = LED ON on signal loss |
 
 ### Timer Usage
 
@@ -127,10 +127,10 @@ For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in par
 
 | Mode | Activation | Behavior |
 |------|------------|----------|
-| **Linear** | PC1 = GND | 1ms → OFF, 2ms → ON (dim) |
-| **On/Off** | PC1 = OPEN | <1.5ms → OFF, ≥1.5ms → ON |
-| **Fail-Safe ON** | PD6 = GND + Timeout | LED on |
-| **Fail-Safe OFF** | PD6 = OPEN + Timeout | LED off |
+| **Linear** | DIM closed | 1ms → OFF, 2ms → ON (dim) |
+| **On/Off** | DIM open | <1.5ms → OFF, ≥1.5ms → ON |
+| **Fail-Safe ON** | ON closed + Timeout | LED on |
+| **Fail-Safe OFF** | ON open + Timeout | LED off |
 
 ### Firmware Build
 
