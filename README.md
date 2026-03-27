@@ -1,5 +1,7 @@
 # sStromDingens – Einfache 1W LED-Beleuchtung per RC-Signal
 
+**[English Version](README_EN.md)**
+
 ---
 
 ## 🎯 Sinn & Zweck
