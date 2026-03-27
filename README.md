@@ -17,7 +17,7 @@
 - Konstantstrom ohne Vorwiderstand
 - Kompakte Platine für 1W LEDs (oder 3W mit Modifikation)
 - Fail-Safe bei Signalverlust
-- 5V–12.6V Eingangsspannung (LiPo 2S–3S)
+- 5V–12.6V Eingangsspannung (LiPo 2S–3S); möglich bis 26V (6S, außerhalb AMS1117-Spezifikation)
 
 **Ideal für:** RC-Fahrzeuge, Flugzeuge, Drohnen, Modellbau, Modellbahnen
 
@@ -36,7 +36,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 |------------|--------------|---------|
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
 | 1W oder 3W LED | Beliebige Farbe | 3W benötigt zusätzlichen Widerstand |
-| LiPo 2S-3S | 7.4V – 12.6V | Standard RC-Akku |
+| LiPo 2S-6S | 7.4V – 22.2V | 2S–3S empfohlen |
 | RC-Empfänger | Beliebig | Standard RC-Setup |
 | WCH-LinkE | Programmer | Für Firmware-Flash |
 
@@ -56,7 +56,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 
 | Anschluss | Funktion |
 |-----------|----------|
-| VIN+ | LiPo Plus (5V–12.6V) |
+| VIN+ | LiPo Plus (5V–26V, max 6S) |
 | VIN- | LiPo Minus (GND) |
 | RC-IN | RC-Signal vom Empfänger |
 | LED+ | LED Plus-Pol |

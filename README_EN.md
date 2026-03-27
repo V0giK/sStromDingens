@@ -17,7 +17,7 @@
 - Constant current without resistor
 - Compact board for 1W LEDs (or 3W with modification)
 - Fail-Safe on signal loss
-- 5V–12.6V input voltage (LiPo 2S–3S)
+- 5V–12.6V input voltage (LiPo 2S–3S); possible up to 26V (6S, outside AMS1117 spec)
 
 **Ideal for:** RC vehicles, airplanes, drones, model building, model railroads
 
@@ -36,7 +36,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 |-----------|-------------|-------|
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
 | 1W or 3W LED | Any color | 3W requires additional resistor |
-| LiPo 2S-3S | 7.4V – 12.6V | Standard RC battery |
+| LiPo 2S-6S | 7.4V – 22.2V | 2S–3S recommended |
 | RC Receiver | Any | Standard RC setup |
 | WCH-LinkE | Programmer | For firmware flash |
 
@@ -56,7 +56,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 
 | Connector | Function |
 |-----------|----------|
-| VIN+ | LiPo Plus (5V–12.6V) |
+| VIN+ | LiPo Plus (5V–26V, max 6S) |
 | VIN- | LiPo Minus (GND) |
 | RC-IN | RC signal from receiver |
 | LED+ | LED positive |
