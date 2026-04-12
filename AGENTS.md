@@ -9,9 +9,11 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 | Eigenschaft | Wert |
 |-------------|------|
 | **Name** | sStromDingens |
-| **Beschreibung** | RC-Signal zu PWM Konverter für 1W LED-Dimmung |
+| **Beschreibung** | RC-gesteuerter LED-Treiber für 1W LEDs (330mA) |
 | **Hardware Version** | 2.0 |
 | **Firmware Version** | 2.0.0 |
+| **MCU** | CH32V003J4M6 (RISC-V RV32EC) |
+| **Framework** | WCH HAL (ch32v00x) |
 | **Status** | Hardware fertig, Firmware fertig (v2.0.0) |
 | **Lizenz** | GPLv3 |
 
@@ -19,120 +21,14 @@ Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterent
 
 Das Projekt verwendet das Versionsschema **X.Y.Z**:
 - **X**: Hardware-Version
-- **Y**: Software-Hauptversion  
+- **Y**: Software-Hauptversion
 - **Z**: Software-Bugfix
 
 Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
 
 ---
 
-## Hardware
-
-### Schaltung
-
-```
-Eingang (5V-26V, AMS1117 begrenzt auf LiPo 2S-3S)
-    │
-    ├─► AMS1117-3.3V ──► CH32V003J4M6 (MCU)
-    │
-    └─► AL8862 (Konstantstrom-LED-Treiber)
-              │
-              ▼
-         1W LED (ohne Vorwiderstand)
-```
-
-### Verwendete Bauteile
-
-| Referenz | Bauteil | Funktion |
-|----------|---------|----------|
-| U1 | AL8862SP-13 | LED-Treiber ( Konstantstrom ) |
-| U2 | CH32V003J4M6 | RISC-V Mikrocontroller |
-| U3 | AMS1117-3.3 | 3.3V Spannungsregler |
-| L1 | 15uH SMD | Induktor für Step-Down |
-| D1, D7 | SS24 | Gleichrichter |
-| D3, D6 | SMF3.3CA | TVS-Diode (Schutz) |
-| D8 | SMAJ26CA | TVS-Diode (Schutz) |
-| C4 | 22uF 10V | Eingangs-Elko |
-| C5 | 10uF 25V | Ausgangs-Elko |
-
-### Wichtige Datasheets
-
-- [AL8862 Datasheet](Hardware/Documents/AL8862_C526360.pdf)
-- [CH32V003 Datasheet](Hardware/Documents/ch32v003.pdf)
-- [CH32V003J4M6 Pinout](Hardware/Documents/CH32V003J4M6_PinOut.txt)
-
-### KiCad Projekt
-
-- **Pfad**: `Hardware/KiCad/sStromDingens/`
-- **BOM**: `Hardware/KiCad/sStromDingens/production/bom.csv`
-
----
-
-## Software / Firmware
-
-### Microcontroller
-
-| Eigenschaft | Wert |
-|-------------|------|
-| **MCU** | CH32V003J4M6 (SOP-8) |
-| **Architektur** | RISC-V RV32EC |
-| **Flash** | 16KB |
-| **RAM** | 2KB |
-| **Takt** | 24MHz (intern) |
-
-### Toolchain
-
-| Komponente | Tool |
-|------------|------|
-| **Compiler** | riscv-none-embed-gcc |
-| **IDE** | MounRiver Studio |
-| **Programmer** | WCH-LinkE |
-
-### Pinbelegung CH32V003J4M6
-
-| Pin | Funktion | Beschreibung |
-|-----|----------|---------------|
-| 5 (PC1) | Mode-Jumper | GND = Linear, OFFEN = On/Off |
-| 6 (PC2) | PWM-Ausgang | Software-PWM (TIM2) → AL8862 CTRL |
-| 7 (PC4) | RC-Eingang | EXTI-Interrupt für Pulsbreitenmessung |
-| 1 (PD6) | Fail-Safe | GND = LED AN bei Signalverlust |
-
-### RC-Signal Spezifikation
-
-| Parameter | Wert |
-|-----------|------|
-| **Eingang** | Standard RC-Servo-Signal |
-| **Periode** | 20ms (50Hz) |
-| **Pulsbreite** | 1ms - 2ms |
-| **Timeout** | 50ms ohne Signal |
-
-### Betriebsmodi
-
-| Modus | Aktivierung | Verhalten |
-|-------|-------------|-----------|
-| Linear | PC1 = GND | 1ms → LED AUS, 2ms → LED AN (proportionales Dimmen) |
-| On/Off | PC1 = OFFEN | <1.5ms → LED AUS, ≥1.5ms → LED AN |
-| Fail-Safe (AN) | PD6 = GND + Timeout | LED AN |
-| Fail-Safe (AUS) | PD6 = OFFEN + Timeout | LED AUS |
-
-### PWM-Ausgang für AL8862
-
-| Parameter | Wert |
-|-----------|------|
-| **Frequenz** | ~100Hz (Software-PWM) |
-| **Spannungsbereich** | 0V - 3.3V |
-| **Duty-Cycle** | 0% - 100% |
-
-### Timer-Nutzung
-
-| Timer | Funktion | Beschreibung |
-|-------|----------|-------------|
-| TIM1 | Zeitbasis | 1µs Auflösung für Pulsbreitenmessung |
-| TIM2 | Software-PWM | 10kHz Interrupt → 100Hz PWM (100 Stufen) |
-
----
-
-## Build-Prozess
+## Build-Kommandos
 
 ### MounRiver Studio
 
@@ -142,44 +38,36 @@ Eingang (5V-26V, AMS1117 begrenzt auf LiPo 2S-3S)
 
 ### CLI Build (Terminal)
 
-**Compiler:**
-```
-riscv-none-embed-gcc -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -Wall
-```
-
 **Toolchain-Pfad:**
 ```
 C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Toolchain\RISC-V Embedded GCC\bin\
 ```
 
-**Beispiel komplett (im firmware-Ordner):**
+**Kompiler-Flags:**
 ```
-"C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Toolchain\RISC-V Embedded GCC\bin\riscv-none-embed-gcc.exe" -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -Wall -IDebug -ICore -IUser -IPeripheral/inc -c User/main.c -o obj/main.o
-...
+-march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -Wall
 ```
 
-**Linker:**
-```
-riscv-none-embed-gcc -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -nostartfiles -Xlinker --gc-sections -T Ld/Link.ld -o firmware.elf [object files] -lprintf -specs=nosys.specs -specs=nano.specs
+**Vollständiger Build (im firmware-Ordner):**
+```bash
+# Kompilieren
+riscv-none-embed-gcc.exe -march=rv32ec -mabi=ilp32e -mcmodel=medlow \
+  -ffunction-sections -fdata-sections -Os -Wall \
+  -IDebug -ICore -IUser -IPeripheral/inc \
+  -c User/main.c -o obj/main.o
+
+# Linken
+riscv-none-embed-gcc.exe -march=rv32ec -mabi=ilp32e -mcmodel=medlow \
+  -ffunction-sections -fdata-sections -Os -nostartfiles \
+  -Xlinker --gc-sections -T Ld/Link.ld -o firmware.elf [object files] \
+  -lprintf -specs=nosys.specs -specs=nano.specs
 ```
 
 ### Flashen
 
-**WCH-LinkUtility CLI:**
+**GUI:** WCH-LinkUtility
 ```
-"C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Others\SWDTool\default\WCH-LinkUtility.exe"
-```
-(Öffnet GUI - Datei auswählen und flashen)
-
-### Kompiler-Flags
-
-```
--mcpu=rv32ec
--mabi=ilp32e
--march=rv32ec
--mcmodel=medlow
--ffunction-sections
--fdata-sections
+C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Others\SWDTool\default\WCH-LinkUtility.exe
 ```
 
 ---
@@ -188,38 +76,212 @@ riscv-none-embed-gcc -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-secti
 
 ```
 sStromDingens/
-├── AGENTS.md           # KI-Entwicklungsdokumentation
-├── README.md           # Dokumentation (Deutsch)
-├── README_EN.md        # Dokumentation (English)
-├── CHANGELOG.md        # Aenderungshistorie
-├── LICENSE             # GPLv3 Lizenz
+├── .github/          # GitHub-spezifische Konfiguration
 ├── Hardware/
-│   ├── Documents/      # Datasheets
-│   └── KiCad/
-│       └── sStromDingens/
-│           ├── production/    # Fertigungsdaten (Gerber, BOM)
-│           └── *.kicad_*      # KiCad Projekt
+│   ├── Documents/    # Datenblätter (AL8862, CH32V003)
+│   └── KiCad/        # KiCad-Projekt, Gerber, BOM
 ├── Software/
-│   └── firmware/
-│       ├── User/       # Anwendungscode
-│       ├── Core/       # RISC-V Core
-│       ├── Peripheral/ # HAL Treiber
-│       ├── Debug/      # Debug-Funktionen
-│       ├── Startup/    # Startup-Code
-│       └── Ld/         # Linker-Skript
-├── images/             # Bilder für README
-│   └── original/       # Originale (vor Skalierung)
-└── .github/
-    └── prompts/        # AI-Prompts für Code-Review
+│   └── firmware/     # Firmware (CH32V003)
+│       ├── User/     # main.c, ch32v00x_it.c, debug.c
+│       ├── Core/     # RISC-V Core
+│       ├── Peripheral/ # HAL-Treiber
+│       ├── Startup/  # Startup-Code
+│       └── Ld/       # Linker-Skript
+├── images/           # Bilder (Top, PCB, Bottom)
+├── AGENTS.md         # KI-Dokumentation & Build-Referenz
+├── CHANGELOG.md      # Änderungshistorie
+├── LICENSE           # GNU GPLv3
+├── README.md         # Deutsche Dokumentation
+└── README_EN.md      # Englische Dokumentation
 ```
 
 ---
 
 ## Coding-Standards
 
-- **Sprache**: C (GNU99)
-- **Einrückung**: 4 Leerzeichen
-- **Kommentare**: Deutsch
-- **Benennung**: `snake_case` für Variablen, `UPPER_SNAKE` für Defines
-- **Includes**: Relative Pfade mit `"..."` (nicht `<...>`)
+### Sprache & Format
 
+| Regel | Wert |
+|-------|------|
+| **Sprache** | C (GNU99) |
+| **Einrückung** | 4 Leerzeichen (keine Tabs) |
+| **Kommentare** | Deutsch |
+| **max. Zeilenlänge** | 100 Zeichen |
+
+### Includes (Reihenfolge)
+
+```c
+// 1. Standard-Bibliotheken
+#include <stdint.h>
+
+// 2. CMSIS / Vendor-Headers
+#include <ch32v00x.h>
+
+// 3. Peripherie-Treiber
+#include "ch32v00x_exti.h"
+
+// 4. Lokale Projekt-Headers
+#include "debug.h"
+#include "ch32v00x_it.h"
+```
+
+**Regel:** Projekt-Headers mit `"..."` inkludieren, nicht `<...>`.
+
+### Typen
+
+| Typ | Verwendung |
+|-----|------------|
+| `uint8_t`, `uint16_t`, `uint32_t` | Unsigned Integer |
+| `int16_t` | Signed Integer |
+| `volatile uint8_t` | ISR-geteilte Variablen |
+| `volatile uint16_t` | ISR-geteilte Variablen (Pulsbreite) |
+
+**Regel:** NIEMALS primitive Typen wie `int`, `long` verwenden (plattformabhängig).
+
+### Benennung
+
+| Typ | Konvention | Beispiel |
+|-----|------------|----------|
+| Defines | UPPER_SNAKE | `RC_MIN_US`, `PWM_STEPS` |
+| Variablen | snake_case | `pwm_duty`, `rc_pulse_us` |
+| Funktionen | snake_case | `GPIO_Init_Custom()` |
+| Enum-Werte | UPPER_SNAKE | `STATE_IDLE` |
+| GPIO-Pins | UPPER_SNAKE | `RC_INPUT_PIN`, `PWM_OUTPUT_PORT` |
+
+### Header-Guards
+
+```c
+#ifndef __MODULE_NAME_H
+#define __MODULE_NAME_H
+
+// ... Content ...
+
+#endif
+```
+
+### Funktionen
+
+**Öffentliche Funktionen:**
+```c
+/**
+ * @brief Kurze Beschreibung
+ *
+ * @param param_name Beschreibung des Parameters
+ * @return Rückgabewert Beschreibung
+ */
+void function_name(uint32_t param_name);
+```
+
+**Lokale (statische) Funktionen:**
+```c
+/**
+ * @brief Interne Hilfsfunktion
+ */
+static void helper_function(void);
+```
+
+### Interrupt-Handler
+
+**Syntax:**
+```c
+void Handler_Name(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+```
+
+**Prioritäten:**
+| Interrupt | Priorität | Grund |
+|-----------|-----------|-------|
+| EXTI (RC-Signal) | 0 (höchste) | RC-Signal nicht verpassen |
+| TIM2 (PWM) | 1 | RC-Signal hat Vorrang |
+| Andere | Standard | - |
+
+### Variablen
+
+**ISR-geteilte Variablen (volatile):**
+```c
+volatile uint8_t pwm_duty = 0;       // Wird von main und TIM2-ISR
+volatile uint16_t rc_pulse_us = 0;   // Wird von EXTI und main
+volatile uint8_t rc_new_data = 0;    // Flag für neuen Puls
+```
+
+### Kommentare
+
+**Funktions-Header (Doxygen-Stil):**
+```c
+/**
+ * @brief Initialisiert GPIO-Pins
+ *
+ * Konfiguriert:
+ * - PC4: RC-Eingang (IN_FLOATING)
+ * - PC2: PWM-Ausgang (Push-Pull)
+ */
+void GPIO_Init_Custom(void);
+```
+
+**Abschnitts-Trenner im Code:**
+```c
+/*============================================================================*/
+/*                            GPIO-INITIALISIERUNG                            */
+/*============================================================================*/
+```
+
+---
+
+## Hardware-Details
+
+### MCU Pinbelegung
+
+| Pin | Funktion | Beschreibung |
+|-----|----------|---------------|
+| PC1 | Mode-Jumper | GND = Linear, OFFEN = On/Off |
+| PC2 | PWM-Ausgang | Software-PWM (TIM2) → AL8862 CTRL |
+| PC4 | RC-Eingang | EXTI-Interrupt für Pulsbreitenmessung |
+| PD6 | Fail-Safe | GND = LED AN bei Signalverlust |
+
+### Timer-Nutzung
+
+| Timer | Funktion | Konfiguration |
+|-------|----------|---------------|
+| TIM1 | Zeitbasis | 1µs Auflösung (Prescaler 24) |
+| TIM2 | Software-PWM | 10kHz Interrupt → 100Hz PWM |
+
+### RC-Signal Spezifikation
+
+| Parameter | Wert |
+|-----------|------|
+| Periode | 20ms (50Hz) |
+| Pulsbreite | 1ms - 2ms |
+| Timeout | 50ms (500 × 100µs) |
+| Toleranz | 800µs - 2500µs |
+
+### Betriebsmodi
+
+| Modus | Aktivierung | Verhalten |
+|-------|-------------|-----------|
+| Linear | PC1 = GND | 1ms → LED AUS, 2ms → LED AN |
+| On/Off | PC1 = OFFEN | <1.5ms → AUS, ≥1.5ms → AN |
+| Fail-Safe AN | PD6 = GND + Timeout | LED AN |
+| Fail-Safe AUS | PD6 = OFFEN + Timeout | LED AUS |
+
+---
+
+## Fehlerbehandlung
+
+### HardFault Handler
+
+```c
+void HardFault_Handler(void)
+{
+    NVIC_SystemReset();  // System-Reset bei kritischen Fehlern
+    while (1) { }
+}
+```
+
+### RC-Signal Validierung
+
+Ungültige Pulsbreiten (< 800µs oder > 2500µs) werden verworfen und lösen keinen Mode-Wechsel aus.
+
+---
+
+## Lizenz
+
+Dieses Projekt steht unter **GNU GPLv3**.

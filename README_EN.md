@@ -1,19 +1,34 @@
-# sStromDingens – Simple 1W LED Lighting via RC Signal
+# sStromDingens – RC-Controlled LED Driver (1W / 330mA)
+
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-green.svg)](CHANGELOG.md)
 
 **[Deutsche Version](README.md)**
 
 ---
 
-## 🎯 Purpose
+## Table of Contents
 
-**One board – two options:**
+- [Overview](#overview)
+- [Operating Modes](#operating-modes)
+- [Quick Start](#quick-start)
+- [Hardware](#hardware)
+- [Software](#software)
+- [Project Structure](#project-structure)
+- [License & Contributing](#license--contributing)
 
-| Mode | Solder Jumper DIM | Application |
-|------|-------------------|-------------|
-| 🌗 **Dimming** | Closed | Headlights, dimmable lamps |
-| 💡 **On/Off** | Open | Tail lights, position lights |
+---
+
+## Overview
+
+RC-controlled LED driver for 1W LEDs (330mA) – small, efficient, RISC-V-based.
+
+```
+RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
+```
 
 **Benefits:**
+
 - Constant current without resistor
 - Compact board for 1W LEDs (or 3W with modification)
 - Fail-Safe on signal loss
@@ -21,19 +36,32 @@
 
 **Ideal for:** RC vehicles, airplanes, drones, model building, model railroads
 
-```
-RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
-               (Dim or On/Off via Jumper)
-```
+---
+
+## Operating Modes
+
+### Dimming / On-Off
+
+| Mode | Solder Jumper DIM | Behavior |
+|------|-------------------|----------|
+| 🌗 **Dimming** | Closed | 1ms → LED OFF, 2ms → LED ON (linear dim) |
+| 💡 **On/Off** | Open | <1.5ms → LED OFF, ≥1.5ms → LED ON |
+
+### Fail-Safe
+
+| Mode | Solder Jumper ON | Behavior |
+|------|------------------|----------|
+| **Fail-Safe ON** | Closed | LED on when signal lost (>50ms) |
+| **Fail-Safe OFF** | Open | LED off when signal lost (>50ms) |
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 ### What do I need?
 
 | Component | Description | Note |
-|-----------|-------------|-------|
+|-----------|-------------|------|
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
 | 1W or 3W LED | Any color | 3W requires additional resistor |
 | LiPo 2S-6S | 7.4V – 22.2V | 2S–3S recommended |
@@ -62,13 +90,9 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 | LED+ | LED positive |
 | LED- | LED negative |
 
-### 3W-LED Modification
-
-For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in parallel to the existing R4 (300mΩ) (piggyback). This halves the total resistance and doubles the current.
-
 ---
 
-## 🔧 Hardware
+## Hardware
 
 ### Components
 
@@ -97,6 +121,10 @@ For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in par
 | TIM1 | Pulse width measurement (1µs resolution) |
 | TIM2 | Software PWM (10kHz → 100Hz PWM) |
 
+### 3W-LED Modification
+
+For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in parallel to the existing R4 (300mΩ) (piggyback). This halves the total resistance and doubles the current.
+
 ### Images
 
 | Top | PCB | Bottom |
@@ -105,7 +133,7 @@ For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in par
 
 ---
 
-## 💻 Software
+## Software
 
 ### RC Signal
 
@@ -123,41 +151,52 @@ For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in par
 | Voltage | 0V – 3.3V |
 | Duty cycle | 0% – 100% (100 steps) |
 
-### Operating Modes
-
-| Mode | Activation | Behavior |
-|------|------------|----------|
-| **Linear** | DIM closed | 1ms → OFF, 2ms → ON (dim) |
-| **On/Off** | DIM open | <1.5ms → OFF, ≥1.5ms → ON |
-| **Fail-Safe ON** | ON closed + Timeout | LED on |
-| **Fail-Safe OFF** | ON open + Timeout | LED off |
-
 ### Firmware Build
 
+**MounRiver Studio:**
+
 ```
-MounRiver Studio → Project → Build Project (Ctrl+B)
+Project → Build Project (Ctrl+B)
 ```
+
+**CLI Build:** See [AGENTS.md](AGENTS.md) for toolchain path, compiler flags, and linker commands.
+
+**Flashing:** WCH-LinkUtility – see [AGENTS.md](AGENTS.md) for path.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 sStromDingens/
-├── Hardware/     # KiCad, Gerber, BOM
-├── Software/     # Firmware (CH32V003)
-├── images/       # Images
-├── AGENTS.md     # AI documentation
-└── CHANGELOG.md  # Change history
+├── .github/          # GitHub-specific configuration
+├── Hardware/
+│   ├── Documents/    # Datasheets (AL8862, CH32V003)
+│   └── KiCad/        # KiCad project, Gerber, BOM
+├── Software/
+│   └── firmware/     # Firmware (CH32V003)
+│       ├── User/     # main.c, ch32v00x_it.c, debug.c
+│       ├── Core/     # RISC-V Core
+│       ├── Peripheral/ # HAL drivers
+│       ├── Startup/  # Startup code
+│       └── Ld/       # Linker script
+├── images/           # Images (Top, PCB, Bottom)
+├── AGENTS.md         # AI documentation & build reference
+├── CHANGELOG.md      # Change history
+├── LICENSE           # GNU GPLv3
+├── README.md         # German documentation
+└── README_EN.md      # English documentation
 ```
 
 ---
 
-## 🤝 Contributing & License
+## License & Contributing
 
 Pull requests welcome! Questions: [Issues](https://github.com/V0giK/sStromDingens/issues)
 
 Licensed under **[GNU GPLv3](LICENSE)**.
+
+Changes: **[CHANGELOG](CHANGELOG.md)**
 
 Developed by [V0giK](https://github.com/V0giK).
 

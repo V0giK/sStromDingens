@@ -1,19 +1,34 @@
-# sStromDingens – Einfache 1W LED-Beleuchtung per RC-Signal
+# sStromDingens – RC-gesteuerter LED-Treiber (1W / 330mA)
+
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-green.svg)](CHANGELOG.md)
 
 **[English Version](README_EN.md)**
 
 ---
 
-## 🎯 Sinn & Zweck
+## Inhaltsangabe
 
-**Eine Platine – zwei Möglichkeiten:**
+- [Kurzbeschreibung](#kurzbeschreibung)
+- [Betriebsmodi](#betriebsmodi)
+- [Schnellstart](#schnellstart)
+- [Hardware](#hardware)
+- [Software](#software)
+- [Projektstruktur](#projektstruktur)
+- [Lizenz & Mitmachen](#lizenz--mitmachen)
 
-| Modus | Lötjumper DIM | Anwendung |
-|-------|----------------|-----------|
-| 🌗 **Dimmen** | Geschlossen | Scheinwerfer, dimmbare Lampen |
-| 💡 **Ein/Aus** | Offen | Rücklichter, Positionslichter |
+---
+
+## Kurzbeschreibung
+
+RC-gesteuerter LED-Treiber für 1W LEDs (330mA) – klein, effizient, RISC-V-basiert.
+
+```
+RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
+```
 
 **Vorteile:**
+
 - Konstantstrom ohne Vorwiderstand
 - Kompakte Platine für 1W LEDs (oder 3W mit Modifikation)
 - Fail-Safe bei Signalverlust
@@ -21,14 +36,27 @@
 
 **Ideal für:** RC-Fahrzeuge, Flugzeuge, Drohnen, Modellbau, Modellbahnen
 
-```
-RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
-               (Dimmen oder Ein/Aus per Jumper)
-```
+---
+
+## Betriebsmodi
+
+### Dimmen / Ein-Aus
+
+| Modus | Lötjumper DIM | Verhalten |
+|-------|----------------|-----------|
+| 🌗 **Dimmen** | Geschlossen | 1ms → LED AUS, 2ms → LED AN (linear dimmen) |
+| 💡 **Ein/Aus** | Offen | <1.5ms → LED AUS, ≥1.5ms → LED AN |
+
+### Fail-Safe
+
+| Modus | Lötjumper ON | Verhalten |
+|-------|--------------|-----------|
+| **Fail-Safe AN** | Geschlossen | LED an bei Signalverlust (>50ms) |
+| **Fail-Safe AUS** | Offen | LED aus bei Signalverlust (>50ms) |
 
 ---
 
-## ⚡ Schnellstart
+## Schnellstart
 
 ### Was brauche ich?
 
@@ -62,13 +90,9 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 | LED+ | LED Plus-Pol |
 | LED- | LED Minus-Pol |
 
-### 3W-LED Modifikation
-
-Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel zum bestehenden R4 (300mΩ) löten (huckepack). Das halbiert den Gesamtwiderstand und verdoppelt den Strom.
-
 ---
 
-## 🔧 Hardware
+## Hardware
 
 ### Komponenten
 
@@ -76,7 +100,7 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 |---------|--------------|
 | AL8862SP-13 | LED-Treiber (Konstantstrom, Step-Down) |
 | CH32V003J4M6 | RISC-V Mikrocontroller (SOP-8, 24MHz) |
-| AMS1117-3.3 | 3.3V Spannungsregler |
+| AMS1117-3.3 | 3.3V Spannungsregulator |
 | 15µH Induktor | Für Step-Down Wandler |
 | SMF3.3CA (x2) | TVS-Diode (Überspannungsschutz) |
 | SMAJ26CA | TVS-Diode (Eingangsschutz) |
@@ -97,6 +121,10 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 | TIM1 | Pulsbreitenmessung (1µs Auflösung) |
 | TIM2 | Software-PWM (10kHz → 100Hz PWM) |
 
+### 3W-LED Modifikation
+
+Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel zum bestehenden R4 (300mΩ) löten (huckepack). Das halbiert den Gesamtwiderstand und verdoppelt den Strom.
+
 ### Bilder
 
 | Top | PCB | Bottom |
@@ -105,7 +133,7 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 
 ---
 
-## 💻 Software
+## Software
 
 ### RC-Signal
 
@@ -123,43 +151,54 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 | Spannung | 0V – 3.3V |
 | Duty-Cycle | 0% – 100% (100 Stufen) |
 
-### Betriebsmodi
-
-| Modus | Aktivierung | Verhalten |
-|-------|-------------|-----------|
-| **Linear** | DIM geschlossen | 1ms → AUS, 2ms → AN (dimmen) |
-| **On/Off** | DIM offen | <1.5ms → AUS, ≥1.5ms → AN |
-| **Fail-Safe AN** | ON geschlossen + Timeout | LED an |
-| **Fail-Safe AUS** | ON offen + Timeout | LED aus |
-
 ### Firmware Build
 
+**MounRiver Studio:**
+
 ```
-MounRiver Studio → Project → Build Project (Strg+B)
+Project → Build Project (Strg+B)
 ```
+
+**CLI-Build:** Siehe [AGENTS.md](AGENTS.md) für Toolchain-Pfad, Compiler-Flags und Linker-Kommandos.
+
+**Flashen:** WCH-LinkUtility – siehe [AGENTS.md](AGENTS.md) für Pfad.
 
 ---
 
-## 📂 Projektstruktur
+## Projektstruktur
 
 ```
 sStromDingens/
-├── Hardware/     # KiCad, Gerber, BOM
-├── Software/     # Firmware (CH32V003)
-├── images/       # Bilder
-├── AGENTS.md     # KI-Dokumentation
-└── CHANGELOG.md  # Änderungshistorie
+├── .github/          # GitHub-spezifische Konfiguration
+├── Hardware/
+│   ├── Documents/    # Datenblätter (AL8862, CH32V003)
+│   └── KiCad/        # KiCad-Projekt, Gerber, BOM
+├── Software/
+│   └── firmware/     # Firmware (CH32V003)
+│       ├── User/     # main.c, ch32v00x_it.c, debug.c
+│       ├── Core/     # RISC-V Core
+│       ├── Peripheral/ # HAL-Treiber
+│       ├── Startup/  # Startup-Code
+│       └── Ld/       # Linker-Skript
+├── images/           # Bilder (Top, PCB, Bottom)
+├── AGENTS.md         # KI-Dokumentation & Build-Referenz
+├── CHANGELOG.md      # Änderungshistorie
+├── LICENSE           # GNU GPLv3
+├── README.md         # Deutsche Dokumentation
+└── README_EN.md      # Englische Dokumentation
 ```
 
 ---
 
-## 🤝 Mitmachen & Lizenz
+## Lizenz & Mitmachen
 
 Pull Requests willkommen! Bei Fragen: [Issues](https://github.com/V0giK/sStromDingens/issues)
 
 Lizenziert unter **[GNU GPLv3](LICENSE)**.
 
-Entwickelt von [V0kiK](https://github.com/V0giK).
+Änderungen: **[CHANGELOG](CHANGELOG.md)**
+
+Entwickelt von [V0giK](https://github.com/V0giK).
 
 ---
 
