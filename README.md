@@ -54,6 +54,8 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 | **Fail-Safe AN** | Geschlossen | LED an bei Signalverlust (>50ms) |
 | **Fail-Safe AUS** | Offen | LED aus bei Signalverlust (>50ms) |
 
+**Standalone-Betrieb:** Ohne RC-Empfänger betreibbar. Lötjumper ON muss geschlossen sein – nach Timeout (50ms) geht die LED automatisch an.
+
 ---
 
 ## Schnellstart
@@ -65,7 +67,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
 | 1W oder 3W LED | Beliebige Farbe | 3W benötigt zusätzlichen Widerstand |
 | LiPo 2S-6S | 7.4V – 22.2V | 2S–3S empfohlen |
-| RC-Empfänger | Beliebig | Standard RC-Setup |
+| RC-Empfänger | Beliebig | Optional bei ON-Jumper geschlossen |
 | WCH-LinkE | Programmer | Für Firmware-Flash |
 
 ### In 3 Schritten zur LED-Beleuchtung
