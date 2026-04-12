@@ -19,6 +19,9 @@ Release/
 *.cproject
 *.launch
 *.settings/
+.clangd
+.template
+*.wvproj
 
 # Editor
 *.swp
