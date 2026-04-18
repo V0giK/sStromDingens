@@ -7054,7 +7054,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LiPo- (2S-6S)"
+		(property "Value" "LiPo- (2S-4S)"
 			(at 138.684 72.39 0)
 			(effects
 				(font
@@ -8902,7 +8902,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "LiPo+ (2S-6S)"
+		(property "Value" "LiPo+ (2S-4S)"
 			(at 138.176 66.294 0)
 			(effects
 				(font

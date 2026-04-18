@@ -7310,7 +7310,7 @@
 			)
 		)
 	)
-	(gr_text "2S-6S"
+	(gr_text "2S-4S"
 		(at 113.6 97.15 0)
 		(layer "B.SilkS" knockout)
 		(uuid "c28ae1d5-ae23-4ea6-9fee-c780b86d8cf4")

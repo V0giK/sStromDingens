@@ -66,7 +66,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 |-----------|-------------|------|
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
 | 1W or 3W LED | Any color | 3W requires additional resistor |
-| LiPo 2S-6S | 7.4V – 22.2V | 2S–3S recommended |
+| LiPo 2S-4S | 7.4V – 16.8V | 2S–3S recommended |
 | RC Receiver | Any | Optional with ON jumper closed |
 | WCH-LinkE | Programmer | For firmware flash |
 
