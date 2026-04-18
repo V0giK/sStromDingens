@@ -32,7 +32,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 - Constant current without resistor
 - Compact board for 1W LEDs (or 3W with modification)
 - Fail-Safe on signal loss
-- 5V–12.6V input voltage (LiPo 2S–3S); possible up to 26V (6S, outside AMS1117 spec)
+- 5V–12.6V input voltage (LiPo 2S–3S); possible up to 16.8V (4S, outside AMS1117 spec)
 
 **Ideal for:** RC vehicles, airplanes, drones, model building, model railroads
 
@@ -86,7 +86,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 
 | Connector | Function |
 |-----------|----------|
-| VIN+ | LiPo Plus (5V–26V, max 6S) |
+| VIN+ | LiPo Plus (5V–16.8V, max 4S) |
 | VIN- | LiPo Minus (GND) |
 | RC-IN | RC signal from receiver |
 | LED+ | LED positive |

@@ -1,4 +1,4 @@
-﻿Designator,Footprint,Quantity,Value,LCSC Part #
+Designator,Footprint,Quantity,Value,LCSC Part #
 C1,0805,1,100n,
 C11,0805,1,100nF 25V,GRM21BR71E104KA01L
 C2,0805,1,10u,
@@ -7,9 +7,9 @@ C5,CASE-B_3528,1,10uF 25V,CA45-B025K106T
 "D1, D7",D_SMA,2,SS24,
 "D3, D6",SOD-123FL_L2.8-W1.8-LS3.7-BI,2,SMF3.3CA,C2990493
 D8,D_SMB,1,SMAJ26CA,C148226
-J1,Conn_01x01_2.54_small,1,LiPo+ (2S-6S),
+J1,Conn_01x01_2.54_small,1,LiPo+ (2S-4S),
 J2,Conn_01x02_2.54,1,LED,
-J3,Conn_01x01_2.54_small,1,LiPo- (2S-6S),
+J3,Conn_01x01_2.54_small,1,LiPo- (2S-4S),
 J7,Conn_01x03_2.54_small,1,RC,
 L1,IND-SMD_L7.1-W6.6,1,15uH,SMMS0650-150M
 R1,0805,1,100R,

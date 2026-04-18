@@ -32,7 +32,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 - Konstantstrom ohne Vorwiderstand
 - Kompakte Platine für 1W LEDs (oder 3W mit Modifikation)
 - Fail-Safe bei Signalverlust
-- 5V–12.6V Eingangsspannung (LiPo 2S–3S); möglich bis 26V (6S, außerhalb AMS1117-Spezifikation)
+- 5V–12.6V Eingangsspannung (LiPo 2S–3S); möglich bis 16.8V (4S, außerhalb AMS1117-Spezifikation)
 
 **Ideal für:** RC-Fahrzeuge, Flugzeuge, Drohnen, Modellbau, Modellbahnen
 
@@ -86,7 +86,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 
 | Anschluss | Funktion |
 |-----------|----------|
-| VIN+ | LiPo Plus (5V–26V, max 6S) |
+| VIN+ | LiPo Plus (5V–16.8V, max 4S) |
 | VIN- | LiPo Minus (GND) |
 | RC-IN | RC-Signal vom Empfänger |
 | LED+ | LED Plus-Pol |

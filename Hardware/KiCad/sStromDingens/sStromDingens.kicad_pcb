@@ -1251,7 +1251,7 @@
 		(path "/81beecd5-014e-4627-87ae-63106a1c2600")
 		(sheetname "/")
 		(sheetfile "sStromDingens.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_bom)
 		(pad "1" smd roundrect
 			(at 0 0 90)
 			(size 4 1.524)
@@ -1472,7 +1472,7 @@
 		(path "/a2688402-057b-43c3-baf6-df94426a6ef2")
 		(sheetname "/")
 		(sheetfile "sStromDingens.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_bom)
 		(pad "1" smd roundrect
 			(at 0 0 90)
 			(size 2.54 1.524)
@@ -5705,7 +5705,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "LiPo+ (2S-6S)"
+		(property "Value" "LiPo+ (2S-4S)"
 			(at 0.1 1.77 90)
 			(layer "B.Fab")
 			(hide yes)
@@ -6462,7 +6462,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Value" "LiPo- (2S-6S)"
+		(property "Value" "LiPo- (2S-4S)"
 			(at 0.1 1.77 90)
 			(layer "B.Fab")
 			(hide yes)
