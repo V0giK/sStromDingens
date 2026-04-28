@@ -34,6 +34,7 @@ fp-info-cache
 *.ps
 *.lck
 EasyEDA.3dshapes/
+.history/
 
 # ---------- OS ----------
 .DS_Store
