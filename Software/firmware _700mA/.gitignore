@@ -1,0 +1,30 @@
+# Build artifacts
+*.o
+*.d
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.obj
+
+# Directories
+obj/
+Debug/
+Release/
+
+# IDE
+.mrs/
+*.project
+*.cproject
+*.launch
+*.settings/
+.clangd
+.template
+*.wvproj
+
+# Editor
+*.swp
+*.swo
+*~
+.DS_Store
