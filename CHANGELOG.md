@@ -1,11 +1,25 @@
 # Changelog - sStromDingens
 
-Alle Änderungen dieses Projekts werden in diesem Dokument festgehalten.
+Alle Aenderungen dieses Projekts werden in diesem Dokument festgehalten.
 
 Versionsschema: **X.Y.Z**
 - **X**: Hardware-Version
 - **Y**: Software-Hauptversion
-- **Z**: Software-Bugfix
+- **Z**: Software-Bugfix (und FX-Unterversion)
+
+---
+
+## [3.0.0] - 2026/05/01
+
+### Hardware v2.0 (unveraendert)
+
+### Software v3.0.0 (Basis-Firmware)
+- **Neu:** Hardware-PWM via TIM2_CH2 auf PC2 (2kHz, statt Software-PWM 100Hz)
+- **Neu:** Compile-time LED-Typ-Auswahl: `#define LED_1W` (100% max) oder `#define LED_3W` (80% max)
+- **Neu:** Hysterese im On/Off-Modus (EIN ab 1550us, AUS unter 1450us)
+- **Entfernt:** `firmware_700mA/` aufgeloest in einheitliche `firmware/`
+- **Fix:** AFIO-Takt korrekt aktiviert fuer TIM2-Remap
+- **Fix:** `ch32v00x_exti.c` jetzt korrekt gelinkt
 
 ---
 

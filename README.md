@@ -1,7 +1,7 @@
-# sStromDingens – RC-gesteuerter LED-Treiber (1W / 330mA)
+# sStromDingens – RC-gesteuerter LED-Treiber (1W / 3W)
 
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-green.svg)](CHANGELOG.md)
+[![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-green.svg)](CHANGELOG.md)
 
 **[English Version](README_EN.md)**
 
@@ -21,20 +21,21 @@
 
 ## Kurzbeschreibung
 
-RC-gesteuerter LED-Treiber für 1W LEDs (330mA) – klein, effizient, RISC-V-basiert.
+RC-gesteuerter LED-Treiber fuer 1W (330mA) und 3W (700mA) LEDs – klein, effizient, RISC-V-basiert.
 
 ```
-RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
+RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
 ```
 
 **Vorteile:**
 
 - Konstantstrom ohne Vorwiderstand
-- Kompakte Platine für 1W LEDs (oder 3W mit Modifikation)
+- Kompakte Platine fuer 1W und 3W LEDs
+- LED-Typ compile-time waehlbar (1W = 100%, 3W = 80% max Duty-Cycle)
 - Fail-Safe bei Signalverlust
-- 5V–12.6V Eingangsspannung (LiPo 2S–3S); möglich bis 16.8V (4S, außerhalb AMS1117-Spezifikation)
+- 5V–12.6V Eingangsspannung (LiPo 2S–3S); moeglich bis 16.8V (4S, ausserhalb AMS1117-Spezifikation)
 
-**Ideal für:** RC-Fahrzeuge, Flugzeuge, Drohnen, Modellbau, Modellbahnen
+**Ideal fuer:** RC-Fahrzeuge, Flugzeuge, Drohnen, Modellbau, Modellbahnen
 
 ---
 
@@ -42,19 +43,19 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 
 ### Dimmen / Ein-Aus
 
-| Modus | Lötjumper DIM | Verhalten |
-|-------|----------------|-----------|
-| 🌗 **Dimmen** | Geschlossen | 1ms → LED AUS, 2ms → LED AN (linear dimmen) |
-| 💡 **Ein/Aus** | Offen | <1.5ms → LED AUS, ≥1.5ms → LED AN |
+| Modus | Lötjumper DIM (PC1) | Verhalten |
+|-------|---------------------|-----------|
+| 🌗 **Dimmen** | GND (geschlossen) | 1ms → LED AUS, 2ms → LED AN (linear dimmen) |
+| 💡 **Ein/Aus** | OFFEN | Hysterese: EIN ab 1550µs, AUS erst unter 1450µs |
 
 ### Fail-Safe
 
-| Modus | Lötjumper ON | Verhalten |
-|-------|--------------|-----------|
-| **Fail-Safe AN** | Geschlossen | LED an bei Signalverlust (>50ms) |
-| **Fail-Safe AUS** | Offen | LED aus bei Signalverlust (>50ms) |
+| Modus | Lötjumper ON (PD6) | Verhalten |
+|-------|---------------------|-----------|
+| **Fail-Safe AN** | GND (geschlossen) | LED an bei Signalverlust (>50ms) |
+| **Fail-Safe AUS** | OFFEN | LED aus bei Signalverlust (>50ms) |
 
-**Standalone-Betrieb:** Ohne RC-Empfänger betreibbar. Lötjumper ON muss geschlossen sein – nach Timeout (50ms) geht die LED automatisch an.
+**Standalone-Betrieb:** Ohne RC-Empfaenger betreibbar. Lötjumper ON muss geschlossen sein – nach Timeout (50ms) geht die LED automatisch an.
 
 ---
 
@@ -120,12 +121,16 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 
 | Timer | Funktion |
 |-------|----------|
-| TIM1 | Pulsbreitenmessung (1µs Auflösung) |
-| TIM2 | Software-PWM (10kHz → 100Hz PWM) |
+| TIM1 | Pulsbreitenmessung (1µs Aufloesung) |
+| TIM2 | Hardware-PWM (2kHz auf PC2 via TIM2_CH2) |
 
 ### 3W-LED Modifikation
 
 Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel zum bestehenden R4 (300mΩ) löten (huckepack). Das halbiert den Gesamtwiderstand und verdoppelt den Strom.
+
+> ⚠️ **Wichtig:** Bei 3W LEDs wird der **AL8862 sehr heiß**! Zwingend eine  
+> **dauerhafte zusätzliche Kühlung** erforderlich (z.B. Kühlkörper,  
+> Gehäuselüfter, thermisch leitende Verbindung zur Aluminium-Platine).
 
 ### Bilder
 
@@ -149,9 +154,16 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 
 | Parameter | Wert |
 |-----------|------|
-| Frequenz | 100Hz |
-| Spannung | 0V – 3.3V |
-| Duty-Cycle | 0% – 100% (100 Stufen) |
+| Frequenz | 2 kHz (Hardware-PWM) |
+| Spannung | 0 V – 3.3 V |
+| Duty-Cycle | 0 % – 100 % (1W) oder 0 % – 80 % (3W) |
+
+> **LED-Typ konfigurieren:** In `Software/firmware/User/main.c` einen der folgenden Defines aktivieren:
+> ```c
+> #define LED_1W   // 330mA LED, max 100% Duty-Cycle
+> // oder
+> #define LED_3W   // 700mA LED, max 80% Duty-Cycle
+> ```
 
 ### Firmware Build
 
@@ -173,18 +185,26 @@ Project → Build Project (Strg+B)
 sStromDingens/
 ├── .github/          # GitHub-spezifische Konfiguration
 ├── Hardware/
-│   ├── Documents/    # Datenblätter (AL8862, CH32V003)
+│   ├── Documents/    # Datenblaetter (AL8862, CH32V003)
 │   └── KiCad/        # KiCad-Projekt, Gerber, BOM
 ├── Software/
-│   └── firmware/     # Firmware (CH32V003)
-│       ├── User/     # main.c, ch32v00x_it.c, debug.c
-│       ├── Core/     # RISC-V Core
-│       ├── Peripheral/ # HAL-Treiber
-│       ├── Startup/  # Startup-Code
-│       └── Ld/       # Linker-Skript
+│   ├── firmware/                   # Basis-Firmware v3.0.0 (1W/3W, Hardware-PWM)
+│   │   ├── User/     # main.c (LED-Auswahl), ch32v00x_it.c, debug.c
+│   │   ├── Core/     # RISC-V Core
+│   │   ├── Peripheral/ # HAL-Treiber
+│   │   ├── Startup/  # Startup-Code
+│   │   ├── Ld/       # Linker-Skript
+│   │   └── README.md # Basis-Firmware Dokumentation
+│   └── firmware_700mA_afterburner/ # Afterburner v3.4.0 (3W LED, FX-Suite)
+│       ├── User/     # main.c (Afterburner FX Engine)
+│       ├── Core/
+│       ├── Peripheral/
+│       ├── Startup/
+│       ├── Ld/
+│       └── README.md # Afterburner Dokumentation
 ├── images/           # Bilder (Top, PCB, Bottom)
 ├── AGENTS.md         # KI-Dokumentation & Build-Referenz
-├── CHANGELOG.md      # Änderungshistorie
+├── CHANGELOG.md      # Aenderungshistorie
 ├── LICENSE           # GNU GPLv3
 ├── README.md         # Deutsche Dokumentation
 └── README_EN.md      # Englische Dokumentation

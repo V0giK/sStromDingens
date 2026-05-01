@@ -19,19 +19,30 @@
  *
  * File Name          : main.c
  * Author             : V0giK
- * Version            : V2.0.0
- * Date               : 2026/03/17
- * Description        : RC-Signal to AL8862 PWM converter (EXTI + TIM2)
+ * Version            : V3.0.0
+ * Date               : 2026/05/01
+ * Description        : RC-Signal to AL8862 Hardware-PWM converter (EXTI + TIM2)
+ *
+ * Kompilieroptionen (eine auswaehlen):
+ *   #define LED_1W    // 330mA LED, max 100% Duty-Cycle
+ *   #define LED_3W    // 700mA LED, max 80% Duty-Cycle
  */
+
+/* LED-Typ auswaehlen:
+ * LED_1W = 1W LED (330mA), PWM_MAX_DUTY = 100%
+ * LED_3W = 3W LED (700mA), PWM_MAX_DUTY = 80%
+ */
+#define LED_1W
 
 #include "debug.h"
 #include "ch32v00x_exti.h"
+#include "ch32v00x_tim.h"
 
 /*============================================================================*/
 /*                            PIN-DEFINITIONEN                                */
 /*============================================================================*/
 
-#define RCC_GPIO_ENABLE  (RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD)
+#define RCC_GPIO_ENABLE  (RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD | RCC_APB2Periph_AFIO)
 
 #define RC_INPUT_PIN    GPIO_Pin_4
 #define RC_INPUT_PORT   GPIOC
@@ -49,10 +60,24 @@
 /*                            PARAMETER-DEFINITIONEN                          */
 /*============================================================================*/
 
+/* LED-Typ Validierung und PWM_MAX_DUTY automatisch setzen */
+#if defined(LED_1W)
+    #define PWM_MAX_DUTY    100     /* 1W LED: max 100% Duty-Cycle (330mA) */
+    #define LED_TYPE_STR    "1W"
+#elif defined(LED_3W)
+    #define PWM_MAX_DUTY    80      /* 3W LED: max 80% Duty-Cycle (700mA) */
+    #define LED_TYPE_STR    "3W"
+#else
+    #error "Bitte LED_1W oder LED_3W in main.c definieren!"
+#endif
+
 /* RC-Signal Grenzen in Mikrosekunden */
 #define RC_MIN_US           1000    /* Minimum: 1ms Pulsbreite */
 #define RC_MAX_US           2000    /* Maximum: 2ms Pulsbreite */
-#define RC_THRESHOLD_US     1500    /* Schwellwert fuer On/Off-Modus */
+
+/* Hysterese fuer On/Off-Modus */
+#define ONOFF_THRESHOLD_ON   1550    /* Einschalten ab hier */
+#define ONOFF_THRESHOLD_OFF  1450    /* Ausschalten erst unter hier */
 
 /* RC-Signal Validierungsgrenzen */
 #define RC_PULSE_MIN_VALID   800    /* Minimum fuer gueltigen Puls (Toleranz) */
@@ -62,14 +87,11 @@
 #define RC_TIMEOUT_TICKS    500
 
 /* PWM-Parameter */
-#define PWM_STEPS           100    /* Anzahl PWM-Stufen (0-100 = 0%-100%) */
+#define PWM_FREQ_HZ         2000    /* Hardware-PWM Frequenz in Hz */
 
 /*============================================================================*/
 /*                            GLOBALE VARIABLEN                               */
 /*============================================================================*/
-
-/* PWM-Duty-Cycle (0-100), wird von TIM2-ISR fuer PWM-Ausgabe verwendet */
-volatile uint8_t pwm_duty = 0;
 
 /* Gemessene RC-Pulsbreite in Mikrosekunden */
 volatile uint16_t rc_pulse_us = 0;
@@ -86,10 +108,10 @@ volatile uint16_t rc_start_time = 0;
 
 /**
  * @brief Initialisiert alle GPIO-Pins
- * 
+ *
  * Konfiguration:
  * - PC4: RC-Eingang (IN_FLOATING, da externer 3.3V-Pegel)
- * - PC2: PWM-Ausgang (Push-Pull fuer AL8862 CTRL)
+ * - PC2: PWM-Ausgang (AF_PP fuer TIM2_CH2)
  * - PC1: Mode-Jumper (Pull-Up, GND = Linear-Modus)
  * - PD6: Fail-Safe-Jumper (Pull-Up, GND = LED AN bei Signalverlust)
  */
@@ -97,8 +119,8 @@ void GPIO_Init_Custom(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    /* GPIO-Takt und AFIO (fuer EXTI) aktivieren */
-    RCC_APB2PeriphClockCmd(RCC_GPIO_ENABLE | RCC_APB2Periph_AFIO, ENABLE);
+    /* GPIO-Takt aktivieren (AFIO bereits in RCC_GPIO_ENABLE enthalten) */
+    RCC_APB2PeriphClockCmd(RCC_GPIO_ENABLE, ENABLE);
 
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
@@ -107,9 +129,9 @@ void GPIO_Init_Custom(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_Init(RC_INPUT_PORT, &GPIO_InitStructure);
 
-    /* PWM-Ausgang: Push-Pull fuer AL8862 CTRL-Pin */
+    /* PWM-Ausgang: Alternate Function Push-Pull fuer TIM2_CH2 */
     GPIO_InitStructure.GPIO_Pin = PWM_OUTPUT_PIN;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_Init(PWM_OUTPUT_PORT, &GPIO_InitStructure);
 
     /* Mode-Jumper: Pull-Up, Jumper gegen GND zieht auf Low */
@@ -129,10 +151,10 @@ void GPIO_Init_Custom(void)
 
 /**
  * @brief Konfiguriert EXTI fuer RC-Signal-Erkennung
- * 
+ *
  * EXTI-Line4 wird auf PC4 geroutet. Bei jeder Flanke (Rising und Falling)
  * wird der EXTI7_0_IRQHandler aufgerufen.
- * 
+ *
  * Interrupt-Prioritaet: 0 (hoechste, damit RC-Signal nicht verpasst wird)
  */
 void EXTI_Init_Custom(void)
@@ -164,12 +186,12 @@ void EXTI_Init_Custom(void)
 
 /**
  * @brief Initialisiert TIM1 als Zeitbasis fuer Pulsbreitenmessung
- * 
+ *
  * Konfiguration:
  * - Prescaler: 24-1 -> 24MHz / 24 = 1MHz = 1us pro Tick
  * - Period: 0xFFFF -> Timer laeuft bis 65535, dann Overflow
  * - Aufloesung: 1us (passend fuer RC-Signal 1000-2000us)
- * 
+ *
  * TIM1 dient nur als Zeitbasis, kein Input-Capture.
  */
 void TIM1_Init(void)
@@ -189,48 +211,71 @@ void TIM1_Init(void)
 }
 
 /*============================================================================*/
-/*                            TIM2-INITIALISIERUNG                            */
+/*                            TIM2-INITIALISIERUNG (Hardware-PWM)             */
 /*============================================================================*/
 
 /**
- * @brief Initialisiert TIM2 fuer Software-PWM
- * 
- * TIM2 erzeugt einen 10kHz Interrupt (100us Periodendauer).
- * Der Interrupt-Handler zaehlt von 0 bis (PWM_STEPS-1) und erzeugt so eine 100Hz PWM
- * mit PWM_STEPS Stufen Aufloesung (1% pro Stufe).
- * 
- * Berechnung:
- * - SystemClock: 24MHz
- * - Prescaler: 0 (keine Teilung)
- * - Period: 2399 -> 24MHz / 2400 = 10kHz Interrupt
- * - PWM-Frequenz: 10kHz / PWM_STEPS = 100Hz
- * 
- * Interrupt-Prioritaet: 1 (niedriger als EXTI, damit RC-Signal Vorrang hat)
+ * @brief Initialisiert TIM2 fuer Hardware-PWM auf PC2 (TIM2_CH2)
+ *
+ * Konfiguration:
+ * - Remap: PartialRemap1 -> TIM2_CH2 auf PC2
+ * - Prescaler: 0 -> Keine Teilung, 24MHz Takt
+ * - Period: 11999 -> 24MHz / 12000 = 2kHz PWM-Frequenz
+ * - Channel 2: PWM Mode 1, Output Enable
+ * - Polarity: High (Active High fuer AL8862)
  */
-void TIM2_Init(void)
+void TIM2_PWM_Init(void)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-    NVIC_InitTypeDef NVIC_InitStructure;
+    TIM_OCInitTypeDef TIM_OCInitStructure;
 
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
-    TIM_TimeBaseStructure.TIM_Period = 2400 - 1;    /* 10kHz Interrupt */
+    /* TIM2 PartialRemap1: CH2 auf PC2 (laut CH32V003RM) */
+    GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE);
+
+    /* Zeitbasis: 2kHz PWM-Frequenz */
+    TIM_TimeBaseStructure.TIM_Period = (24000 / 2) - 1; /* 24MHz / 12000 = 2kHz */
     TIM_TimeBaseStructure.TIM_Prescaler = 0;
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
-    /* Update-Interrupt aktivieren */
-    TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+    /* PWM Mode 1 konfigurieren */
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_OutputNState = TIM_OutputState_Disable;
+    TIM_OCInitStructure.TIM_Pulse = 0; /* Initial 0% Duty */
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+    TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+    TIM_OC2Init(TIM2, &TIM_OCInitStructure);
 
-    /* NVIC konfigurieren */
-    NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;  /* Niedriger als EXTI */
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
+    /* Enable preload */
+    TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Enable);
+    TIM_ARRPreloadConfig(TIM2, ENABLE);
+
+    /* TIM2-Interrupts explizit deaktivieren (falls Residualstaetig aus alter FW) */
+    NVIC_DisableIRQ(TIM2_IRQn);
 
     TIM_Cmd(TIM2, ENABLE);
+}
+
+/**
+ * @brief Setzt den PWM-Duty-Cycle fuer TIM2_CH2
+ *
+ * @param duty Duty-Cycle in Prozent (0-100)
+ */
+static void set_pwm_output(uint8_t duty)
+{
+    if (duty > 100)
+    {
+        duty = 100;
+    }
+    uint16_t compare = (uint16_t)(((uint32_t)duty * (TIM2->ATRLR + 1)) / 100);
+    TIM_SetCompare2(TIM2, compare);
 }
 
 /*============================================================================*/
@@ -239,12 +284,12 @@ void TIM2_Init(void)
 
 /**
  * @brief Hauptprogramm
- * 
+ *
  * Ablauf:
  * 1. System initialisieren (GPIO, EXTI, TIM1, TIM2)
  * 2. Jumper-Stati einlesen (Linear/On/Off, Fail-Safe)
  * 3. Hauptschleife:
- *    - Neues RC-Signal verarbeiten -> pwm_duty berechnen
+ *    - Neues RC-Signal verarbeiten -> pwm_output berechnen
  *    - Timeout ueberwachen -> Fail-Safe aktivieren
  */
 int main(void)
@@ -265,21 +310,21 @@ int main(void)
     GPIO_Init_Custom();
     EXTI_Init_Custom();
     TIM1_Init();
-    TIM2_Init();
+    TIM2_PWM_Init();
 
     /* Jumper-Stati einlesen (Pull-Up: OFFEN=1, GND=0) */
     linear_mode = !GPIO_ReadInputDataBit(MODE_JUMPER_PORT, MODE_JUMPER_PIN);
     failsafe_high = !GPIO_ReadInputDataBit(FAILSAFE_JUMPER_PORT, FAILSAFE_JUMPER_PIN);
 
     /* PWM initial auf 0 (LED AUS) */
-    pwm_duty = 0;
+    set_pwm_output(0);
 
     /* Startup-Verzoegerung: 1 Sekunde warten bis System stabil */
     Delay_Ms(1000);
 
-    /*========================================================================*/
-    /*                            HAUPTSCHLEIFE                               */
-    /*========================================================================*/
+    uint8_t onoff_state = 0;         /* 0 = LED AUS, 1 = LED AN (On/Off-Modus) */
+
+    uint8_t pwm_output = 0;
 
     while (1)
     {
@@ -294,38 +339,44 @@ int main(void)
             {
                 /*------------------------------------------------------------*/
                 /* LINEAR-MODUS: Proportionales Dimmen                       */
-                /* 1000us -> pwm_duty = 0         -> LED AUS                  */
-                /* 2000us -> pwm_duty = PWM_STEPS -> LED AN                   */
+                /* 1000us -> pwm_output = 0            -> LED AUS             */
+                /* 2000us -> pwm_output = PWM_MAX_DUTY   -> LED AN (max)      */
                 /*------------------------------------------------------------*/
                 if (rc_pulse_us <= RC_MIN_US)
                 {
-                    pwm_duty = 0;
+                    pwm_output = 0;
                 }
                 else if (rc_pulse_us >= RC_MAX_US)
                 {
-                    pwm_duty = PWM_STEPS;
+                    pwm_output = PWM_MAX_DUTY;
                 }
                 else
                 {
-                    /* Linear interpolieren: (rc_pulse_us - 1000) / 10 */
-                    pwm_duty = (uint8_t)((rc_pulse_us - RC_MIN_US) / 10);
+                    /* Linear auf 0 ... PWM_MAX_DUTY skalieren */
+                    pwm_output = (uint8_t)(((uint32_t)(rc_pulse_us - RC_MIN_US) * PWM_MAX_DUTY)
+                                         / (RC_MAX_US - RC_MIN_US));
                 }
             }
             else
             {
                 /*------------------------------------------------------------*/
-                /* ON/OFF-MODUS: Schwellwert-basiertes Schalten              */
-                /* < 1500us -> pwm_duty = 0         -> LED AUS                */
-                /* >= 1500us -> pwm_duty = PWM_STEPS -> LED AN                */
+                /* ON/OFF-MODUS: Hysterese-Schaltung                         */
+                /*                                                             */
+                /* Einschalten: >= 1550us (ONOFF_THRESHOLD_ON)                */
+                /* Ausschalten: < 1450us (ONOFF_THRESHOLD_OFF)                */
+                /* Zwischen 1450-1550us: Zustand beibehalten (Hysterese)      */
                 /*------------------------------------------------------------*/
-                if (rc_pulse_us >= RC_THRESHOLD_US)
+                if (rc_pulse_us >= ONOFF_THRESHOLD_ON)
                 {
-                    pwm_duty = PWM_STEPS;
+                    onoff_state = 1;
                 }
-                else
+                else if (rc_pulse_us < ONOFF_THRESHOLD_OFF)
                 {
-                    pwm_duty = 0;
+                    onoff_state = 0;
                 }
+                /* Ansonsten: onoff_state unveraendert (Hysterese-Bereich) */
+
+                pwm_output = onoff_state ? PWM_MAX_DUTY : 0;
             }
         }
         else
@@ -342,11 +393,13 @@ int main(void)
         {
             /*------------------------------------------------------------*/
             /* FAIL-SAFE: Bei Signalverlust LED auf definierten Zustand  */
-            /* failsafe_high = 1 (PD6=GND) -> pwm_duty = PWM_STEPS -> LED AN */
-            /* failsafe_high = 0 (PD6=OFFEN) -> pwm_duty = 0 -> LED AUS   */
+            /* failsafe_high = 1 (PD6=GND) -> LED AN (max) */
+            /* failsafe_high = 0 (PD6=OFFEN) -> LED AUS   */
             /*------------------------------------------------------------*/
-            pwm_duty = failsafe_high ? PWM_STEPS : 0;
+            pwm_output = failsafe_high ? PWM_MAX_DUTY : 0;
         }
+
+        set_pwm_output(pwm_output);
 
         /* Loop-Verzoegerung: 100us */
         Delay_Us(100);

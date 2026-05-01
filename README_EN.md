@@ -1,7 +1,7 @@
-# sStromDingens – RC-Controlled LED Driver (1W / 330mA)
+# sStromDingens – RC-Controlled LED Driver (1W / 3W)
 
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-green.svg)](CHANGELOG.md)
+[![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-green.svg)](CHANGELOG.md)
 
 **[Deutsche Version](README.md)**
 
@@ -21,16 +21,17 @@
 
 ## Overview
 
-RC-controlled LED driver for 1W LEDs (330mA) – small, efficient, RISC-V-based.
+RC-controlled LED driver for 1W (330mA) and 3W (700mA) LEDs – small, efficient, RISC-V-based.
 
 ```
-RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
+RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W or 3W)
 ```
 
 **Benefits:**
 
 - Constant current without resistor
-- Compact board for 1W LEDs (or 3W with modification)
+- Compact board for 1W and 3W LEDs
+- LED type selectable at compile-time (1W = 100%, 3W = 80% max duty-cycle)
 - Fail-Safe on signal loss
 - 5V–12.6V input voltage (LiPo 2S–3S); possible up to 16.8V (4S, outside AMS1117 spec)
 
@@ -42,16 +43,16 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 
 ### Dimming / On-Off
 
-| Mode | Solder Jumper DIM | Behavior |
-|------|-------------------|----------|
-| 🌗 **Dimming** | Closed | 1ms → LED OFF, 2ms → LED ON (linear dim) |
-| 💡 **On/Off** | Open | <1.5ms → LED OFF, ≥1.5ms → LED ON |
+| Mode | Solder Jumper DIM (PC1) | Behavior |
+|------|-------------------------|----------|
+| 🌗 **Dimming** | GND (closed) | 1ms → LED OFF, 2ms → LED ON (linear dim) |
+| 💡 **On/Off** | Open | Hysteresis: ON at 1550µs, OFF below 1450µs |
 
 ### Fail-Safe
 
-| Mode | Solder Jumper ON | Behavior |
-|------|------------------|----------|
-| **Fail-Safe ON** | Closed | LED on when signal lost (>50ms) |
+| Mode | Solder Jumper ON (PD6) | Behavior |
+|------|--------------------------|----------|
+| **Fail-Safe ON** | GND (closed) | LED on when signal lost (>50ms) |
 | **Fail-Safe OFF** | Open | LED off when signal lost (>50ms) |
 
 **Standalone operation:** Usable without RC receiver. Solder jumper ON must be closed – after timeout (50ms) the LED turns on automatically.
@@ -121,11 +122,15 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► 1W LED
 | Timer | Function |
 |-------|----------|
 | TIM1 | Pulse width measurement (1µs resolution) |
-| TIM2 | Software PWM (10kHz → 100Hz PWM) |
+| TIM2 | Hardware PWM (2kHz on PC2 via TIM2_CH2) |
 
-### 3W-LED Modification
+### 3W LED Modification
 
 For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in parallel to the existing R4 (300mΩ) (piggyback). This halves the total resistance and doubles the current.
+
+> ⚠️ **Important:** With 3W LEDs the **AL8862 gets very hot**! Mandatory  
+> **permanent additional cooling** required (e.g. heatsink, case fan,  
+> thermally conductive connection to aluminum chassis).
 
 ### Images
 
@@ -149,9 +154,16 @@ For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in par
 
 | Parameter | Value |
 |-----------|-------|
-| Frequency | 100Hz |
-| Voltage | 0V – 3.3V |
-| Duty cycle | 0% – 100% (100 steps) |
+| Frequency | 2 kHz (Hardware PWM) |
+| Voltage | 0 V – 3.3 V |
+| Duty cycle | 0 % – 100 % (1W) or 0 % – 80 % (3W) |
+
+> **LED type configuration:** In `Software/firmware/User/main.c`, enable one of the following defines:
+> ```c
+> #define LED_1W   // 330mA LED, max 100% duty-cycle
+> // or
+> #define LED_3W   // 700mA LED, max 80% duty-cycle
+> ```
 
 ### Firmware Build
 
@@ -176,12 +188,20 @@ sStromDingens/
 │   ├── Documents/    # Datasheets (AL8862, CH32V003)
 │   └── KiCad/        # KiCad project, Gerber, BOM
 ├── Software/
-│   └── firmware/     # Firmware (CH32V003)
-│       ├── User/     # main.c, ch32v00x_it.c, debug.c
-│       ├── Core/     # RISC-V Core
-│       ├── Peripheral/ # HAL drivers
-│       ├── Startup/  # Startup code
-│       └── Ld/       # Linker script
+│   ├── firmware/                   # Base firmware v3.0.0 (1W/3W, Hardware-PWM)
+│   │   ├── User/     # main.c (LED selection), ch32v00x_it.c, debug.c
+│   │   ├── Core/     # RISC-V Core
+│   │   ├── Peripheral/ # HAL drivers
+│   │   ├── Startup/  # Startup code
+│   │   ├── Ld/       # Linker script
+│   │   └── README.md # Base firmware documentation
+│   └── firmware_700mA_afterburner/ # Afterburner v3.4.0 (3W LED, FX-Suite)
+│       ├── User/     # main.c (Afterburner FX Engine)
+│       ├── Core/
+│       ├── Peripheral/
+│       ├── Startup/
+│       ├── Ld/
+│       └── README.md # Afterburner documentation
 ├── images/           # Images (Top, PCB, Bottom)
 ├── AGENTS.md         # AI documentation & build reference
 ├── CHANGELOG.md      # Change history
