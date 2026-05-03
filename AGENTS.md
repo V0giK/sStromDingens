@@ -1,7 +1,7 @@
 # AGENTS.md - sStromDingens
 
 Dieses Dokument enthaelt wichtige Informationen fuer die KI-gestuetzte Weiterentwicklung des Projekts.
-Letzte Aktualisierung: 2026-05-01 (v3.4.0 Afterburner Edition)
+Letzte Aktualisierung: 2026-05-03 (v3.4.1 Afterburner Edition)
 
 ---
 
@@ -12,10 +12,10 @@ Letzte Aktualisierung: 2026-05-01 (v3.4.0 Afterburner Edition)
 | **Name** | sStromDingens |
 | **Beschreibung** | RC-gesteuerter LED-Treiber (1W / 3W), Hardware-PWM, Afterburner-FX |
 | **Hardware Version** | 2.0 |
-| **Firmware** | v3.0.0 (Basis), v3.4.0 (Afterburner FX) |
+| **Firmware** | v3.0.1 (Basis), v3.4.1 (Afterburner FX) |
 | **MCU** | CH32V003J4M6 (RISC-V RV32EC) |
 | **Framework** | WCH HAL (ch32v00x) |
-| **Status** | Hardware fertig, Firmware v3.4.0 fertig (Afterburner Edition) |
+| **Status** | Hardware fertig, Firmware v3.0.1/v3.4.1 fertig (Afterburner Edition) |
 | **Lizenz** | GPLv3 |
 
 ### Versionsschema
@@ -33,10 +33,10 @@ Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
 
 | Ordner | Beschreibung | LED-Typ | Status |
 |--------|-------------|---------|--------|
-| `Software/firmware/` | Basis-Firmware (Hardware-PWM), compile-time LED-Auswahl | 1W (330mA) oder 3W (700mA) | v3.0.0 stabil |
-| `Software/firmware_700mA_afterburner/` | 3W-LED Afterburner (700mA), Hardware-PWM @ 2kHz, FX-Suite | 3W (700mA) | v3.4.0 stabil |
+| `Software/firmware/` | Basis-Firmware (Hardware-PWM), compile-time LED-Auswahl | 330mA bis 830mA (5 Varianten) | v3.0.1 stabil |
+| `Software/firmware_700mA_afterburner/` | 3W-LED Afterburner (500mA std.), Hardware-PWM @ 2kHz, FX-Suite | 3W LED (max. 830mA konfigurierbar) | v3.4.1 stabil |
 
-> **Hinweis:** Die Basis-Firmware (`firmware/`) unterstuetzt beide LED-Typen ueber `#define LED_1W` oder `#define LED_3W` in `User/main.c`. `PWM_MAX_DUTY` wird automatisch angepasst (100% fuer 1W, 80% fuer 3W). Die Afterburner-Variante bleibt unabhaengig.
+> **Hinweis:** Die Basis-Firmware (`firmware/`) unterstuetzt fuenf LED-Varianten ueber `#define LED_1W`, `#define LED_3W`, `#define LED_500`, `#define LED_666` oder `#define LED_830` in `User/main.c`. `PWM_MAX_DUTY` wird automatisch angepasst. `LED_1W` nutzt die Original-Hardware; alle anderen Optionen erfordern die modifizierte Hardware (2x300 mOhm parallel). Die Afterburner-Variante bleibt unabhaengig.
 
 ---
 
@@ -48,7 +48,7 @@ Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
 2. Build: `Project -> Build Project` (Strg+B)
 3. Flashen: `Tools -> WCH-LinkUtility`
 
-### CLI Build (Terminal) - Afterburner v3.4.0
+### CLI Build (Terminal) - Afterburner v3.4.1
 
 **Toolchain-Pfad:**
 ```
@@ -138,14 +138,14 @@ sStromDingens/
 │   ├── Documents/                  # Datenblaetter (AL8862, CH32V003RM)
 │   └── KiCad/                      # KiCad-Projekt, Gerber, BOM
 ├── Software/
-│   ├── firmware/                   # Basis-Firmware v3.0.0 (HW-PWM, compile-time LED-Auswahl)
+│   ├── firmware/                   # Basis-Firmware v3.0.1 (HW-PWM, compile-time LED-Auswahl)
 │   │   ├── User/                   # main.c, ch32v00x_it.c, debug.c
 │   │   ├── Core/                   # RISC-V Core
 │   │   ├── Peripheral/             # HAL-Treiber
 │   │   ├── Startup/                # Startup-Code
 │   │   ├── Ld/                     # Linker-Skript
 │   │   └── README.md               # Basis-Firmware Dokumentation
-│   └── firmware_700mA_afterburner/ # Afterburner v3.4.0 (3W LED, FX)
+│   └── firmware_700mA_afterburner/ # Afterburner v3.4.1 (3W LED, FX)
 │       ├── User/                     # main.c (Afterburner FX Engine)
 │       ├── Core/
 │       ├── Peripheral/
@@ -261,7 +261,7 @@ void Handler_Name(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 > **Hinweis:** TIM2 laeuft in Hardware-PWM-Modus ohne Interrupt. Kein TIM2-IRQ mehr noetig.
 
-**Prioritaeten (Afterburner v3.4.0):**
+**Prioritaeten (Afterburner v3.4.1):**
 | Interrupt | Prioritaet | Grund |
 |-----------|------------|-------|
 | EXTI (RC-Signal) | 0 (hoechste) | RC-Signal nicht verpassen |
@@ -305,7 +305,7 @@ void GPIO_Init_Custom(void);
 
 ---
 
-## Hardware-Details (Afterburner v3.4.0)
+## Hardware-Details (Afterburner v3.4.1)
 
 ### MCU Pinbelegung CH32V003J4M6 (SOP-8)
 
@@ -322,7 +322,7 @@ void GPIO_Init_Custom(void);
 | **7** | **PC4** | **RC-Eingang (EXTI4)** | IN_FLOATING |
 | 8 | PD1 / SWIO | Programmierung (WCH-LinkE) | |
 
-**Afterburner v3.4.0 (firmware_700mA_afterburner/):**
+**Afterburner v3.4.1 (firmware_700mA_afterburner/):**
 
 | Pin | Bezeichnung | Funktion | Bemerkung |
 |:---:|:---|:---|:---|
@@ -356,12 +356,12 @@ void GPIO_Init_Custom(void);
 | Parameter | Wert |
 |-----------|------|
 | Typ | Buck-Boost Konstantstromtreiber |
-| Max. Strom | 330mA (1W LED) bis 700mA (3W LED, nur mit Kühlung) |
+| Max. Strom | 330mA (LED_1W) bis 830mA (LED_830, nur mit Kühlung) |
 | Steuerung | PWM-Dimming via CTRL-Pin |
 | PWM-Frequenz | >500 Hz (hier: 2kHz Hardware-PWM) |
-| Max. Duty | 100% bei 1W, 80% bei 3W (configurierbar via PWM_MAX_DUTY) |
+| Max. Duty | 100% bei LED_1W, 60% bei LED_500, 80% bei LED_3W/LED_666, 100% bei LED_830 (configurierbar via PWM_MAX_DUTY) |
 
-### Nachbrenner-Modi (Afterburner FX v3.4.0)
+### Nachbrenner-Modi (Afterburner FX v3.4.1)
 
 | Modus | Verhalten |
 |-------|-----------|
@@ -388,9 +388,9 @@ Die Basis-Firmware hat keine State-Machine im Afterburner-Stil. Sie bietet zwei 
 | **Linear** | Proportionales Dimmen: 1000us → AUS, 2000us → PWM_MAX_DUTY% |
 | **On/Off** | Hysterese: EIN ab 1550us, AUS erst unter 1450us |
 
-`PWM_MAX_DUTY` wird zur Compile-Zeit via `#define LED_1W` (100%) oder `#define LED_3W` (80%) gesetzt.
+`PWM_MAX_DUTY` wird zur Compile-Zeit via `#define LED_1W` (100%), `#define LED_3W` (80%), `#define LED_500` (60%), `#define LED_666` (80%) oder `#define LED_830` (100%) gesetzt.
 
-### State-Machine (Afterburner v3.4.0)
+### State-Machine (Afterburner v3.4.1)
 
 ```
 POWER-ON -> SELFTEST (200ms @ 50%) -> IDLE
@@ -416,7 +416,7 @@ COOL_DOWN --(Fertig)--> IDLE
            --(Gas wieder&gt;=1650)--> SPOOL_UP
 ```
 
-### Wichtige Defines (main.c – Afterburner v3.4.0)
+### Wichtige Defines (main.c – Afterburner v3.4.1)
 
 ```c
 #define THRESHOLD_ON        1650    /* Einschalten ab hier */
@@ -440,15 +440,19 @@ COOL_DOWN --(Fertig)--> IDLE
 #define RC_TIMEOUT_TICKS    500     /* 50ms Fail-Safe Timeout */
 ```
 
-### Basis-Firmware Defines (firmware/User/main.c v3.0.0)
+### Basis-Firmware Defines (firmware/User/main.c v3.0.1)
 
 ```c
-#define LED_1W              /* Oder LED_3W – setzt PWM_MAX_DUTY automatisch */
+#define LED_1W              /* 330mA, 100% — Original-Hardware */
+#define LED_3W              /* 666mA, 80%  — modifizierte Hardware */
+#define LED_500             /* 500mA, 60%  — modifizierte Hardware */
+#define LED_666             /* 666mA, 80%  — modifizierte Hardware */
+#define LED_830             /* 830mA, 100% — modifizierte Hardware */
 #define RC_MIN_US           1000
 #define RC_MAX_US           2000
 #define ONOFF_THRESHOLD_ON   1550
 #define ONOFF_THRESHOLD_OFF  1450
-#define PWM_MAX_DUTY        Auto (100 bei LED_1W, 80 bei LED_3W)
+/* PWM_MAX_DUTY automatisch je nach LED-Typ */
 #define PWM_FREQ_HZ         2000
 #define RC_TIMEOUT_TICKS    500
 ```

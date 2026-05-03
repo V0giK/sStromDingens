@@ -1,6 +1,6 @@
 # sStromDingens – Basis-Firmware
 
-RC-gesteuerter LED-Treiber fuer 1W (330mA) und 3W (700mA) LEDs.
+RC-gesteuerter LED-Treiber fuer 1W (330mA) bis 3W (830mA) LEDs, konfigurierbar ueber Compile-Time Defines.
 
 ---
 
@@ -20,7 +20,7 @@ RC-gesteuerter LED-Treiber fuer 1W (330mA) und 3W (700mA) LEDs.
 
 | Eigenschaft | Wert |
 |-------------|------|
-| **Version** | 3.0.0 |
+| **Version** | 3.0.1 |
 | **PWM-Methode** | TIM2 Hardware-PWM @ 2 kHz |
 | **RC-Zeitbasis** | TIM1 @ 1 MHz (1 µs/Tick) |
 | **Framework** | WCH HAL (ch32v00x) |
@@ -29,20 +29,29 @@ RC-gesteuerter LED-Treiber fuer 1W (330mA) und 3W (700mA) LEDs.
 
 ## LED-Typ auswaehlen
 
-In `User/main.c` einen der folgenden Defines aktivieren:
+In `User/main.c` einen der folgenden Defines aktivieren (nur eine gleichzeitig):
 
 ```c
-#define LED_1W   /* 330mA LED, max 100% Duty-Cycle */
+#define LED_1W   /* 330mA LED, max 100% Duty-Cycle — Original-Hardware */
 // oder
-#define LED_3W   /* 700mA LED, max 80% Duty-Cycle  */
+#define LED_3W   /* 666mA LED, max 80% Duty-Cycle  — modifizierte Hardware */
+// oder
+#define LED_500  /* 500mA LED, max 60% Duty-Cycle  — modifizierte Hardware */
+// oder
+#define LED_666  /* 666mA LED, max 80% Duty-Cycle  — modifizierte Hardware */
+// oder
+#define LED_830  /* 830mA LED, max 100% Duty-Cycle — modifizierte Hardware */
 ```
 
-| LED-Typ | Max. Strom | PWM_MAX_DUTY |
-|---------|-----------|--------------|
-| 1W (330mA) | 330 mA | 100 % |
-| 3W (700mA) | 700 mA | 80 % |
+| LED-Typ | Max. Strom | PWM_MAX_DUTY | Hardware |
+|---------|-----------|--------------|----------|
+| LED_1W (330mA) | 330 mA | 100 % | Original-Hardware |
+| LED_3W (666mA) | 666 mA | 80 % | Modifiziert (2x300 mOhm parallel) |
+| LED_500 | 500 mA | 60 % | Modifiziert (2x300 mOhm parallel) |
+| LED_666 | 666 mA | 80 % | Modifiziert (2x300 mOhm parallel) |
+| LED_830 | 830 mA | 100 % | Modifiziert (2x300 mOhm parallel) |
 
-> **Achtung:** 3W-LED mit 100 % Duty-Cycle ueberhitzt den AL8862! Immer `LED_3W` verwenden.
+> **Achtung:** Die modifizierte Hardware (zusaetzlicher 300mOhm parallel zu R4) erhoeht den LED-Strom signifikant. Allein ueber `PWM_MAX_DUTY` wird der Strom begrenzt — dennoch wird der AL8862 bei hohen Leistungen sehr heiss. Zwingend eine **dauerhafte zusaetzliche Kuehlung** erforderlich (z.B. Kuehlkoerper, Gehaeuseluefter).
 
 ---
 
@@ -99,7 +108,15 @@ Bei Signalverlust (> 50 ms Timeout):
 In `User/main.c` oberste Zeile anpassen:
 
 ```c
-#define LED_1W   // oder #define LED_3W
+#define LED_1W   // Original-Hardware, 330mA
+// oder
+#define LED_3W   // Modifizierte Hardware, 666mA
+// oder
+#define LED_500  // Modifizierte Hardware, 500mA
+// oder
+#define LED_666  // Modifizierte Hardware, 666mA
+// oder
+#define LED_830  // Modifizierte Hardware, 830mA
 ```
 
 ### CLI Build
@@ -131,6 +148,10 @@ riscv-none-embed-objcopy.exe -O ihex firmware.elf firmware.hex
 ---
 
 ## Changelog
+
+### v3.0.1
+- **Neu:** Fuenf Compile-time LED-Varianten: `LED_1W`, `LED_3W`, `LED_500`, `LED_666`, `LED_830`
+- **Hinweis:** `LED_1W` nutzt Original-Hardware; alle anderen erfordern modifizierte Hardware (2x300 mOhm parallel)
 
 ### v3.0.0
 - **Neu:** Hardware-PWM auf PC2 via TIM2_CH2 (2 kHz)

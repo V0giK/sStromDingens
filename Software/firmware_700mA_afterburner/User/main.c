@@ -19,7 +19,7 @@
  *
  * File Name          : main.c
  * Author             : V0giK
- * Version            : V3.4.0
+ * Version            : V3.4.1
  * Date               : 2026/04/30
  * Description        : RC Afterburner Controller (FX Edition)
  */
@@ -68,7 +68,9 @@
 
 /* PWM-Parameter */
 #define PWM_FREQ_HZ         2000    /* Hardware-PWM Frequenz in Hz */
-#define PWM_MAX_DUTY        80      /* Maximale Ausgangsleistung in % (0-100) */
+#define PWM_MAX_DUTY        60      /* (ca. 500 mA) Maximale Ausgangsleistung in % (0-100) */
+//#define PWM_MAX_DUTY        80      /* (ca. 666 mA) Maximale Ausgangsleistung in % (0-100) */
+//#define PWM_MAX_DUTY        100     /* (ca. 830 mA) Maximale Ausgangsleistung in % (0-100) */
 
 /* Afterburner-Effekte */
 #define SPOOL_UP_MIN_MS     80      /* Minimale Flash-Dauer */

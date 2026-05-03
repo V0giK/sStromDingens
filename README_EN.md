@@ -1,7 +1,7 @@
 # sStromDingens – RC-Controlled LED Driver (1W / 3W)
 
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-green.svg)](CHANGELOG.md)
+[![Version: 3.0.1](https://img.shields.io/badge/Version-3.0.1-green.svg)](CHANGELOG.md)
 
 **[Deutsche Version](README.md)**
 
@@ -21,7 +21,7 @@
 
 ## Overview
 
-RC-controlled LED driver for 1W (330mA) and 3W (700mA) LEDs – small, efficient, RISC-V-based.
+RC-controlled LED driver for 1W (330mA) up to 3W (830mA) LEDs – configurable via compile-time defines, small, efficient, RISC-V-based.
 
 ```
 RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W or 3W)
@@ -31,7 +31,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W or 3W)
 
 - Constant current without resistor
 - Compact board for 1W and 3W LEDs
-- LED type selectable at compile-time (1W = 100%, 3W = 80% max duty-cycle)
+- LED type configurable at compile-time (1W = 100%, 500mA = 60%, 666mA = 80%, 830mA = 100% max duty-cycle)
 - Fail-Safe on signal loss
 - 5V–12.6V input voltage (LiPo 2S–3S); possible up to 16.8V (4S, outside AMS1117 spec)
 
@@ -66,7 +66,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W or 3W)
 | Component | Description | Note |
 |-----------|-------------|------|
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
-| 1W or 3W LED | Any color | 3W requires additional resistor |
+| 1W or 3W LED | Any color | Configurable via compile-time define (see Software section) |
 | LiPo 2S-4S | 7.4V – 16.8V | 2S–3S recommended |
 | RC Receiver | Any | Optional with ON jumper closed |
 | WCH-LinkE | Programmer | For firmware flash |
@@ -124,13 +124,22 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W or 3W)
 | TIM1 | Pulse width measurement (1µs resolution) |
 | TIM2 | Hardware PWM (2kHz on PC2 via TIM2_CH2) |
 
-### 3W LED Modification
+### LED Current Modification
 
-For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in parallel to the existing R4 (300mΩ) (piggyback). This halves the total resistance and doubles the current.
+For higher LED currents (500mA–830mA): Solder an additional **300mΩ resistor** in parallel to the existing R4 (300mΩ) (piggyback). This halves the total resistance and doubles the maximum current.
 
-> ⚠️ **Important:** With 3W LEDs the **AL8862 gets very hot**! Mandatory  
+> ⚠️ **Important:** With modified hardware the **AL8862 gets very hot**! Mandatory  
 > **permanent additional cooling** required (e.g. heatsink, case fan,  
 > thermally conductive connection to aluminum chassis).
+
+| LED Type | Max. Current | Duty-Cycle | Hardware |
+|---------|-----------|-----------|----------|
+| LED_1W (original) | 330mA | 100% | Original |
+| LED_500 | 500mA | 60% | Modified |
+| LED_3W / LED_666 | 666mA | 80% | Modified |
+| LED_830 | 830mA | 100% | Modified |
+
+> **Note:** `LED_1W` runs on original hardware without modification. All other variants require the parallel soldered 300mΩ resistor.
 
 ### Images
 
@@ -156,13 +165,19 @@ For 3W LEDs (approx. 650-700mA): Solder an additional **300mΩ resistor** in par
 |-----------|-------|
 | Frequency | 2 kHz (Hardware PWM) |
 | Voltage | 0 V – 3.3 V |
-| Duty cycle | 0 % – 100 % (1W) or 0 % – 80 % (3W) |
+| Duty cycle | 0 % – 100 % (1W), 0 % – 60 % (500mA), 0 % – 80 % (666mA), 0 % – 100 % (830mA) |
 
-> **LED type configuration:** In `Software/firmware/User/main.c`, enable one of the following defines:
+> **LED type configuration:** In `Software/firmware/User/main.c`, enable one of the following defines (only one at a time):
 > ```c
-> #define LED_1W   // 330mA LED, max 100% duty-cycle
+> #define LED_1W   // 330mA, original hardware, 100% duty-cycle
 > // or
-> #define LED_3W   // 700mA LED, max 80% duty-cycle
+> #define LED_3W   // 666mA, modified hardware, 80% duty-cycle
+> // or
+> #define LED_500  // 500mA, modified hardware, 60% duty-cycle
+> // or
+> #define LED_666  // 666mA, modified hardware, 80% duty-cycle
+> // or
+> #define LED_830  // 830mA, modified hardware, 100% duty-cycle
 > ```
 
 ### Firmware Build
@@ -188,14 +203,14 @@ sStromDingens/
 │   ├── Documents/    # Datasheets (AL8862, CH32V003)
 │   └── KiCad/        # KiCad project, Gerber, BOM
 ├── Software/
-│   ├── firmware/                   # Base firmware v3.0.0 (1W/3W, Hardware-PWM)
+│   ├── firmware/                   # Base firmware v3.0.1 (1W-3W, Hardware-PWM, LED selection)
 │   │   ├── User/     # main.c (LED selection), ch32v00x_it.c, debug.c
 │   │   ├── Core/     # RISC-V Core
 │   │   ├── Peripheral/ # HAL drivers
 │   │   ├── Startup/  # Startup code
 │   │   ├── Ld/       # Linker script
 │   │   └── README.md # Base firmware documentation
-│   └── firmware_700mA_afterburner/ # Afterburner v3.4.0 (3W LED, FX-Suite)
+│   └── firmware_700mA_afterburner/ # Afterburner v3.4.1 (3W LED, FX-Suite)
 │       ├── User/     # main.c (Afterburner FX Engine)
 │       ├── Core/
 │       ├── Peripheral/

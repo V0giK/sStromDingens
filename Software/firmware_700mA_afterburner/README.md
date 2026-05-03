@@ -1,6 +1,6 @@
 # sStromDingens – RC Afterburner Controller
 
-Firmware fuer den CH32V003J4M6 (RISC-V) zur Steuerung einer 3W-LED ueber den AL8862 Konstantstromtreiber.
+Firmware fuer den CH32V003J4M6 (RISC-V) zur Steuerung einer Hochleistungs-LED ueber den AL8862 Konstantstromtreiber.
 
 ---
 
@@ -20,7 +20,7 @@ Firmware fuer den CH32V003J4M6 (RISC-V) zur Steuerung einer 3W-LED ueber den AL8
 
 | Eigenschaft | Wert |
 |-------------|------|
-| **Version** | 3.4.0 |
+| **Version** | 3.4.1 |
 | **PWM-Methode** | TIM2 Hardware-PWM @ 2 kHz |
 | **RC-Zeitbasis** | TIM1 @ 1 MHz (1 µs/Tick) |
 | **Framework** | WCH HAL (ch32v00x) |
@@ -99,7 +99,7 @@ Alle Parameter sind als `#define` in `User/main.c` direkt im Code konfigurierbar
 | `THRESHOLD_OFF` | 1550 µs | Ausschaltschwelle |
 | `PULSE_MIN` | 1000 µs | RC-Minimum (Leerlauf) |
 | `PULSE_MAX` | 2000 µs | RC-Maximum (Vollgas) |
-| `PWM_MAX_DUTY` | 80 % | Maximale Helligkeit |
+| `PWM_MAX_DUTY` | 60 % | Maximale Helligkeit (Standard, ca. 500mA). Alternativ: 80% (ca. 666mA) oder 100% (ca. 830mA) |
 | `PWM_FREQ_HZ` | 2000 Hz | Hardware-PWM-Frequenz |
 | `SPOOL_UP_MIN_MS` | 80 ms | Min. Zünd-Flash-Dauer |
 | `SPOOL_UP_MAX_MS` | 130 ms | Max. Zünd-Flash-Dauer |
@@ -189,6 +189,9 @@ firmware_700mA_afterburner/
 ---
 
 ## Changelog
+
+### v3.4.1 (FX Edition)
+- **Hinweis:** `PWM_MAX_DUTY` Standard jetzt 60% (ca. 500mA), konfigurierbar auf 80% (666mA) oder 100% (830mA)
 
 ### v3.4.0 (FX Edition)
 - **Neu:** Power-On Selftest

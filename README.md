@@ -1,7 +1,7 @@
 # sStromDingens – RC-gesteuerter LED-Treiber (1W / 3W)
 
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-green.svg)](CHANGELOG.md)
+[![Version: 3.0.1](https://img.shields.io/badge/Version-3.0.1-green.svg)](CHANGELOG.md)
 
 **[English Version](README_EN.md)**
 
@@ -21,7 +21,7 @@
 
 ## Kurzbeschreibung
 
-RC-gesteuerter LED-Treiber fuer 1W (330mA) und 3W (700mA) LEDs – klein, effizient, RISC-V-basiert.
+RC-gesteuerter LED-Treiber fuer 1W (330mA) bis 3W (830mA) LEDs – konfigurierbar ueber Compile-Time Defines, klein, effizient, RISC-V-basiert.
 
 ```
 RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
@@ -31,7 +31,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
 
 - Konstantstrom ohne Vorwiderstand
 - Kompakte Platine fuer 1W und 3W LEDs
-- LED-Typ compile-time waehlbar (1W = 100%, 3W = 80% max Duty-Cycle)
+- LED-Typ compile-time waehlbar (1W = 100%, 500mA = 60%, 666mA = 80%, 830mA = 100% max Duty-Cycle)
 - Fail-Safe bei Signalverlust
 - 5V–12.6V Eingangsspannung (LiPo 2S–3S); moeglich bis 16.8V (4S, ausserhalb AMS1117-Spezifikation)
 
@@ -66,7 +66,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
 | Komponente | Beschreibung | Hinweis |
 |------------|--------------|---------|
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
-| 1W oder 3W LED | Beliebige Farbe | 3W benötigt zusätzlichen Widerstand |
+| 1W oder 3W LED | Beliebige Farbe | Konfigurierbar ueber Compile-Time Define (siehe Software-Abschnitt) |
 | LiPo 2S-4S | 7.4V – 16.8V | 2S–3S empfohlen |
 | RC-Empfänger | Beliebig | Optional bei ON-Jumper geschlossen |
 | WCH-LinkE | Programmer | Für Firmware-Flash |
@@ -124,13 +124,22 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
 | TIM1 | Pulsbreitenmessung (1µs Aufloesung) |
 | TIM2 | Hardware-PWM (2kHz auf PC2 via TIM2_CH2) |
 
-### 3W-LED Modifikation
+### LED-Strom-Modifikation
 
-Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel zum bestehenden R4 (300mΩ) löten (huckepack). Das halbiert den Gesamtwiderstand und verdoppelt den Strom.
+Fuer hoehere LED-Stroeme (500mA–830mA): Einen zusaetzlichen **300mΩ Widerstand** parallel zum bestehenden R4 (300mΩ) loeten (huckepack). Das halbiert den Gesamtwiderstand und verdoppelt den maximalen Strom.
 
-> ⚠️ **Wichtig:** Bei 3W LEDs wird der **AL8862 sehr heiß**! Zwingend eine  
-> **dauerhafte zusätzliche Kühlung** erforderlich (z.B. Kühlkörper,  
-> Gehäuselüfter, thermisch leitende Verbindung zur Aluminium-Platine).
+> ⚠️ **Wichtig:** Bei modifizierter Hardware wird der **AL8862 sehr heiss**! Zwingend eine  
+> **dauerhafte zusaetzliche Kuehlung** erforderlich (z.B. Kuehlkoerper,  
+> Gehaeuseluefter, thermisch leitende Verbindung zur Aluminium-Platine).
+
+| LED-Typ | Max. Strom | Duty-Cycle | Hardware |
+|---------|-----------|-----------|----------|
+| LED_1W (Original) | 330mA | 100% | Original |
+| LED_500 | 500mA | 60% | Modifiziert |
+| LED_3W / LED_666 | 666mA | 80% | Modifiziert |
+| LED_830 | 830mA | 100% | Modifiziert |
+
+> **Hinweis:** `LED_1W` laeuft auf der Original-Hardware ohne Modifikation. Alle anderen Varianten erfordern den parallel geloeteten 300mΩ Widerstand.
 
 ### Bilder
 
@@ -156,13 +165,19 @@ Für 3W LEDs (ca. 650-700mA): Einen zusätzlichen **300mΩ Widerstand** parallel
 |-----------|------|
 | Frequenz | 2 kHz (Hardware-PWM) |
 | Spannung | 0 V – 3.3 V |
-| Duty-Cycle | 0 % – 100 % (1W) oder 0 % – 80 % (3W) |
+| Duty-Cycle | 0 % – 100 % (1W), 0 % – 60 % (500mA), 0 % – 80 % (666mA), 0 % – 100 % (830mA) |
 
-> **LED-Typ konfigurieren:** In `Software/firmware/User/main.c` einen der folgenden Defines aktivieren:
+> **LED-Typ konfigurieren:** In `Software/firmware/User/main.c` einen der folgenden Defines aktivieren (nur eine gleichzeitig):
 > ```c
-> #define LED_1W   // 330mA LED, max 100% Duty-Cycle
+> #define LED_1W   // 330mA, Original-Hardware, 100% Duty-Cycle
 > // oder
-> #define LED_3W   // 700mA LED, max 80% Duty-Cycle
+> #define LED_3W   // 666mA, modifizierte Hardware, 80% Duty-Cycle
+> // oder
+> #define LED_500  // 500mA, modifizierte Hardware, 60% Duty-Cycle
+> // oder
+> #define LED_666  // 666mA, modifizierte Hardware, 80% Duty-Cycle
+> // oder
+> #define LED_830  // 830mA, modifizierte Hardware, 100% Duty-Cycle
 > ```
 
 ### Firmware Build
@@ -188,14 +203,14 @@ sStromDingens/
 │   ├── Documents/    # Datenblaetter (AL8862, CH32V003)
 │   └── KiCad/        # KiCad-Projekt, Gerber, BOM
 ├── Software/
-│   ├── firmware/                   # Basis-Firmware v3.0.0 (1W/3W, Hardware-PWM)
+│   ├── firmware/                   # Basis-Firmware v3.0.1 (1W-3W, Hardware-PWM, LED-Auswahl)
 │   │   ├── User/     # main.c (LED-Auswahl), ch32v00x_it.c, debug.c
 │   │   ├── Core/     # RISC-V Core
 │   │   ├── Peripheral/ # HAL-Treiber
 │   │   ├── Startup/  # Startup-Code
 │   │   ├── Ld/       # Linker-Skript
 │   │   └── README.md # Basis-Firmware Dokumentation
-│   └── firmware_700mA_afterburner/ # Afterburner v3.4.0 (3W LED, FX-Suite)
+│   └── firmware_700mA_afterburner/ # Afterburner v3.4.1 (3W LED, FX-Suite)
 │       ├── User/     # main.c (Afterburner FX Engine)
 │       ├── Core/
 │       ├── Peripheral/

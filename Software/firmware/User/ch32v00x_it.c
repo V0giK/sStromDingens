@@ -19,7 +19,7 @@
  *
  * File Name          : ch32v00x_it.c
  * Author             : V0giK
- * Version            : V3.0.0
+ * Version            : V3.0.1
  * Date               : 2026/05/01
  * Description        : Interrupt Service Routines (EXTI for RC, no SW-PWM).
  */

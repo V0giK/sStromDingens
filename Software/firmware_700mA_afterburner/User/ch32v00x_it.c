@@ -19,7 +19,7 @@
  *
  * File Name          : ch32v00x_it.c
  * Author             : V0giK
- * Version            : V3.4.0
+ * Version            : V3.4.1
  * Date               : 2026/04/30
  * Description        : Interrupt Service Routines.
  */

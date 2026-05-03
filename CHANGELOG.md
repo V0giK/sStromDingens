@@ -9,6 +9,21 @@ Versionsschema: **X.Y.Z**
 
 ---
 
+## [3.0.1] - 2026/05/03
+
+### Software v3.4.1 (Afterburner FX)
+- **Aenderung:** `PWM_MAX_DUTY` Standard jetzt 60% (ca. 500mA), konfigurierbar auf 80% (666mA) oder 100% (830mA)
+- **Hinweis:** Alle Afterburner-Stufen erfordern modifizierte Hardware (2x300 mOhm parallel) bei >330mA
+- **Update:** Dokumentation angepasst
+
+### Software v3.0.1 (Basis-Firmware)
+- **Neu:** Fuenf Compile-time LED-Varianten: `LED_1W`, `LED_3W`, `LED_500`, `LED_666`, `LED_830`
+- **Aenderung:** `LED_1W` nutzt Original-Hardware (330mA, 100%)
+- **Hinweis:** `LED_3W`, `LED_500`, `LED_666`, `LED_830` erfordern modifizierte Hardware (2x300 mOhm parallel)
+- **Update:** Dokumentation angepasst (READMEs, AGENTS.md)
+
+---
+
 ## [3.0.0] - 2026/05/01
 
 ### Hardware v2.0 (unveraendert)

@@ -19,20 +19,26 @@
  *
  * File Name          : main.c
  * Author             : V0giK
- * Version            : V3.0.0
+ * Version            : V3.0.1
  * Date               : 2026/05/01
  * Description        : RC-Signal to AL8862 Hardware-PWM converter (EXTI + TIM2)
  *
  * Kompilieroptionen (eine auswaehlen):
- *   #define LED_1W    // 330mA LED, max 100% Duty-Cycle
- *   #define LED_3W    // 700mA LED, max 80% Duty-Cycle
+ *   #define LED_1W    // 330mA LED, max 100% Duty-Cycle (Original-Hardware)
+ *   #define LED_3W    // 666mA LED, max 80% Duty-Cycle (modifizierte Hardware)
+ *   #define LED_500   // 500mA LED, max 60% Duty-Cycle (modifizierte Hardware)
+ *   #define LED_666   // 666mA LED, max 80% Duty-Cycle (modifizierte Hardware)
+ *   #define LED_830   // 830mA LED, max 100% Duty-Cycle (modifizierte Hardware)
  */
 
 /* LED-Typ auswaehlen:
- * LED_1W = 1W LED (330mA), PWM_MAX_DUTY = 100%
- * LED_3W = 3W LED (700mA), PWM_MAX_DUTY = 80%
+ * LED_1W  = 1W LED (330mA), PWM_MAX_DUTY = 100%, Original-Hardware
+ * LED_3W  = 3W LED (666mA), PWM_MAX_DUTY = 80%,  modifizierte Hardware (2x300 mOhm)
+ * LED_500 = 500mA         , PWM_MAX_DUTY = 60%,  modifizierte Hardware (2x300 mOhm)
+ * LED_666 = 666mA         , PWM_MAX_DUTY = 80%,  modifizierte Hardware (2x300 mOhm)
+ * LED_830 = 830mA         , PWM_MAX_DUTY = 100%, modifizierte Hardware (2x300 mOhm)
  */
-#define LED_1W
+#define LED_500
 
 #include "debug.h"
 #include "ch32v00x_exti.h"
@@ -63,12 +69,16 @@
 /* LED-Typ Validierung und PWM_MAX_DUTY automatisch setzen */
 #if defined(LED_1W)
     #define PWM_MAX_DUTY    100     /* 1W LED: max 100% Duty-Cycle (330mA) */
-    #define LED_TYPE_STR    "1W"
 #elif defined(LED_3W)
-    #define PWM_MAX_DUTY    80      /* 3W LED: max 80% Duty-Cycle (700mA) */
-    #define LED_TYPE_STR    "3W"
+    #define PWM_MAX_DUTY    80      /* 3W LED: max 80% Duty-Cycle (666mA) */
+#elif defined(LED_500)
+    #define PWM_MAX_DUTY    60      /* max 60% Duty-Cycle (500mA) */
+#elif defined(LED_666)
+    #define PWM_MAX_DUTY    80      /* max 80% Duty-Cycle (666mA) */
+#elif defined(LED_830)
+    #define PWM_MAX_DUTY    100     /* max 100% Duty-Cycle (830mA) */
 #else
-    #error "Bitte LED_1W oder LED_3W in main.c definieren!"
+    #error "Bitte LED_1W, LED_3W, LED_500, LED_666 oder LED_830 in main.c definieren!"
 #endif
 
 /* RC-Signal Grenzen in Mikrosekunden */
