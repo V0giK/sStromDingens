@@ -1,11 +1,11 @@
 # AGENTS.md - sStromDingens
 
-Dieses Dokument enthaelt wichtige Informationen fuer die KI-gestuetzte Weiterentwicklung des Projekts.
+Dieses Dokument enthält wichtige Informationen für die KI-gestützte Weiterentwicklung des Projekts.
 Letzte Aktualisierung: 2026-05-03 (v3.4.1 Afterburner Edition)
 
 ---
 
-## Projektuebersicht
+## Projektübersicht
 
 | Eigenschaft | Wert |
 |-------------|------|
@@ -36,7 +36,7 @@ Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
 | `Software/firmware/` | Basis-Firmware (Hardware-PWM), compile-time LED-Auswahl | 330mA bis 830mA (5 Varianten) | v3.0.1 stabil |
 | `Software/firmware_700mA_afterburner/` | 3W-LED Afterburner (500mA std.), Hardware-PWM @ 2kHz, FX-Suite | 3W LED (max. 830mA konfigurierbar) | v3.4.1 stabil |
 
-> **Hinweis:** Die Basis-Firmware (`firmware/`) unterstuetzt fuenf LED-Varianten ueber `#define LED_1W`, `#define LED_3W`, `#define LED_500`, `#define LED_666` oder `#define LED_830` in `User/main.c`. `PWM_MAX_DUTY` wird automatisch angepasst. `LED_1W` nutzt die Original-Hardware; alle anderen Optionen erfordern die modifizierte Hardware (2x300 mOhm parallel). Die Afterburner-Variante bleibt unabhaengig.
+> **Hinweis:** Die Basis-Firmware (`firmware/`) unterstützt fuenf LED-Varianten über `#define LED_1W`, `#define LED_3W`, `#define LED_500`, `#define LED_666` oder `#define LED_830` in `User/main.c`. `PWM_MAX_DUTY` wird automatisch angepasst. `LED_1W` nutzt die Original-Hardware; alle anderen Optionen erfordern die modifizierte Hardware (2x300 mOhm parallel). Die Afterburner-Variante bleibt unabhaengig.
 
 ---
 
@@ -44,7 +44,7 @@ Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
 
 ### MounRiver Studio
 
-1. Projekt oeffnen: `Software/firmware/firmware.project` (Original)
+1. Projekt öffnen: `Software/firmware/firmware.project` (Original)
 2. Build: `Project -> Build Project` (Strg+B)
 3. Flashen: `Tools -> WCH-LinkUtility`
 
@@ -55,7 +55,7 @@ Beispiel: Version **1.2.3** = Hardware v1, Software v2.3
 C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\components\WCH\Toolchain\RISC-V Embedded GCC\bin\
 ```
 
-**Kompiler-Flags fuer alle Module:**
+**Kompiler-Flags für alle Module:**
 ```
 -march=rv32ec -mabi=ilp32e -mcmodel=medlow -ffunction-sections -fdata-sections -Os -Wall
 ```
@@ -117,7 +117,7 @@ $OBJCOPY = "C:\MounRiver\MounRiver_Studio2\resources\app\resources\win32\compone
 
 ### Inkrementeller Build (nur geaenderte Dateien)
 
-Nach Aenderungen nur das betroffene `.o` neu kompilieren und Schritt 2+3 wiederholen.
+Nach Änderungen nur das betroffene `.o` neu kompilieren und Schritt 2+3 wiederholen.
 
 ### Flashen
 
@@ -154,7 +154,7 @@ sStromDingens/
 │       └── README.md               # Afterburner-spezifische Dokumentation
 ├── images/                         # Bilder (Top, PCB, Bottom)
 ├── AGENTS.md                       # KI-Dokumentation & Build-Referenz
-├── CHANGELOG.md                    # Aenderungshistorie
+├── CHANGELOG.md                    # Änderungshistorie
 ├── LICENSE                         # GNU GPLv3
 ├── README.md                       # Deutsche Dokumentation (Original)
 └── README_EN.md                    # Englische Dokumentation (Original)
@@ -227,13 +227,13 @@ sStromDingens/
 
 ### Funktionen
 
-**Oeffentliche Funktionen:**
+**Öffentliche Funktionen:**
 ```c
 /**
  * @brief Kurze Beschreibung
  *
  * @param param_name Beschreibung des Parameters
- * @return Rueckgabewert Beschreibung
+ * @return Rückgabewert Beschreibung
  */
 void function_name(uint32_t param_name);
 ```
@@ -259,7 +259,7 @@ void Handler_Name(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 | EXTI (RC-Signal) | 0 (hoechste) | RC-Signal nicht verpassen |
 | Andere | Standard | - |
 
-> **Hinweis:** TIM2 laeuft in Hardware-PWM-Modus ohne Interrupt. Kein TIM2-IRQ mehr noetig.
+> **Hinweis:** TIM2 laeuft in Hardware-PWM-Modus ohne Interrupt. Kein TIM2-IRQ mehr nötig.
 
 **Prioritaeten (Afterburner v3.4.1):**
 | Interrupt | Prioritaet | Grund |
@@ -267,7 +267,7 @@ void Handler_Name(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 | EXTI (RC-Signal) | 0 (hoechste) | RC-Signal nicht verpassen |
 | Andere | Standard | - |
 
-> **Hinweis:** TIM2 laeuft in Hardware-PWM-Modus ohne Interrupt. Kein TIM2-IRQ mehr noetig.
+> **Hinweis:** TIM2 laeuft in Hardware-PWM-Modus ohne Interrupt. Kein TIM2-IRQ mehr nötig.
 
 ### Variablen
 
@@ -280,7 +280,7 @@ volatile uint16_t rc_start_time = 0; /* TIM1-Counter bei Rising Edge */
 
 > **Hinweis:** `ch32v00x_it.c` darf nur in `main.c` definierte Variablen als `extern` verwenden.
 > Die alten Variablen `pwm_duty` und `mode_jumper` existieren nicht mehr in v3.0.0.
-> `pwm_output` ist eine lokale Variable in `main()` (keine ISR-Teilung noetig bei Hardware-PWM).
+> `pwm_output` ist eine lokale Variable in `main()` (keine ISR-Teilung nötig bei Hardware-PWM).
 
 ### Kommentare
 
@@ -291,7 +291,7 @@ volatile uint16_t rc_start_time = 0; /* TIM1-Counter bei Rising Edge */
  *
  * Konfiguriert:
  * - PC4: RC-Eingang (IN_FLOATING)
- * - PC2: PWM-Ausgang (AF_PP fuer TIM2_CH2)
+ * - PC2: PWM-Ausgang (AF_PP für TIM2_CH2)
  */
 void GPIO_Init_Custom(void);
 ```
@@ -370,7 +370,7 @@ void GPIO_Init_Custom(void);
 | Spool-Up | Zufaelliger Flash 80-130ms @ 100% beim Zuenden |
 | Ramp-Down | 80ms sanftes Absenken Flash -> Sollwert |
 | Cool-Down | 250ms sanftes Abklingen auf AUS |
-| Vollgas-Burst | 20ms Blitz auf 100% bei Sprung ueber 1950us |
+| Vollgas-Burst | 20ms Blitz auf 100% bei Sprung über 1950us |
 | Flame-Out | 150ms wildes Flackern bei abruptem Gas-weg |
 | Flicker | +/-15% normales Rauschen, +/-25% im Heat-Bereich (>1900us) |
 | Fail-Safe | LED AUS bei Signalverlust (>50ms) |
@@ -421,7 +421,7 @@ COOL_DOWN --(Fertig)--> IDLE
 ```c
 #define THRESHOLD_ON        1650    /* Einschalten ab hier */
 #define THRESHOLD_OFF       1550    /* Ausschalten erst unter hier */
-#define FLAMEOUT_HIGH       1800    /* Vorheriger Wert ueber hier */
+#define FLAMEOUT_HIGH       1800    /* Vorheriger Wert über hier */
 #define FLAMEOUT_LOW        1200    /* Aktueller Wert unter hier */
 #define BURST_THRESHOLD     1950    /* Vollgas-Burst ab hier */
 #define PWM_MAX_DUTY        80      /* Maximale Ausgangsleistung in % */
@@ -485,15 +485,15 @@ void HardFault_Handler(void)
 
 ### RC-Signal Validierung
 
-Ungueltige Pulsbreiten (&lt; 800us oder &gt; 2500us) werden verworfen und loesen keinen Mode-Wechsel aus.
+Ungueltige Pulsbreiten (&lt; 800us oder &gt; 2500us) werden verworfen und lösen keinen Mode-Wechsel aus.
 
 ### Build-Fehler beheben
 
-| Fehler | Ursache | Loesung |
+| Fehler | Ursache | Lösung |
 |--------|---------|---------|
 | `undefined reference to 'rc_valid'` | Alte Variable in ch32v00x_it.c | Entfernen oder durch `rc_new_data` ersetzen |
 | `undefined reference to 'EXTI_Init'` | ch32v00x_exti.o fehlt | `ch32v00x_exti.c` kompilieren und linken |
-| `.specs: No such file` | `-specs=` nicht unterstuetzt | Flag entfernen |
+| `.specs: No such file` | `-specs=` nicht unterstützt | Flag entfernen |
 | `undefined reference to 'printf'` | `-lprintf` nicht verfuegbar | Flag entfernen |
 
 ---

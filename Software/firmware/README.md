@@ -1,6 +1,6 @@
 # sStromDingens – Basis-Firmware
 
-RC-gesteuerter LED-Treiber fuer 1W (330mA) bis 3W (830mA) LEDs, konfigurierbar ueber Compile-Time Defines.
+RC-gesteuerter LED-Treiber für 1W (330mA) bis 3W (830mA) LEDs, konfigurierbar über Compile-Time Defines.
 
 ---
 
@@ -9,7 +9,7 @@ RC-gesteuerter LED-Treiber fuer 1W (330mA) bis 3W (830mA) LEDs, konfigurierbar u
 | Komponente | Pin | Funktion |
 |:---|:---|:---|
 | **RC Input** | PC4 (Pin 7) | RC-Empfaengersignal (1000–2000 µs) |
-| **PWM Out**  | PC2 (Pin 6) | TIM2_CH2 Hardware-PWM fuer AL8862 |
+| **PWM Out**  | PC2 (Pin 6) | TIM2_CH2 Hardware-PWM für AL8862 |
 | **Mode-Jumper** | PC1 (Pin 5) | GND = Linear, OFFEN = On/Off |
 | **Fail-Safe** | PD6 (Pin 1) | GND = LED AN bei Signalverlust |
 | **SWD** | PD1 (Pin 8) | WCH-LinkE Programmierung |
@@ -27,7 +27,7 @@ RC-gesteuerter LED-Treiber fuer 1W (330mA) bis 3W (830mA) LEDs, konfigurierbar u
 
 ---
 
-## LED-Typ auswaehlen
+## LED-Typ auswählen
 
 In `User/main.c` einen der folgenden Defines aktivieren (nur eine gleichzeitig):
 
@@ -51,7 +51,7 @@ In `User/main.c` einen der folgenden Defines aktivieren (nur eine gleichzeitig):
 | LED_666 | 666 mA | 80 % | Modifiziert (2x300 mOhm parallel) |
 | LED_830 | 830 mA | 100 % | Modifiziert (2x300 mOhm parallel) |
 
-> **Achtung:** Die modifizierte Hardware (zusaetzlicher 300mOhm parallel zu R4) erhoeht den LED-Strom signifikant. Allein ueber `PWM_MAX_DUTY` wird der Strom begrenzt — dennoch wird der AL8862 bei hohen Leistungen sehr heiss. Zwingend eine **dauerhafte zusaetzliche Kuehlung** erforderlich (z.B. Kuehlkoerper, Gehaeuseluefter).
+> **Achtung:** Die modifizierte Hardware (zusätzlicher 300mOhm parallel zu R4) erhöht den LED-Strom signifikant. Allein über `PWM_MAX_DUTY` wird der Strom begrenzt — dennoch wird der AL8862 bei hohen Leistungen sehr heiss. Zwingend eine **dauerhafte zusätzliche Kühlung** erforderlich (z.B. Kühlkörper, Gehäuselüfter).
 
 ---
 

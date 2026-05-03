@@ -1,6 +1,6 @@
 # sStromDingens – RC Afterburner Controller
 
-Firmware fuer den CH32V003J4M6 (RISC-V) zur Steuerung einer Hochleistungs-LED ueber den AL8862 Konstantstromtreiber.
+Firmware für den CH32V003J4M6 (RISC-V) zur Steuerung einer Hochleistungs-LED über den AL8862 Konstantstromtreiber.
 
 ---
 
@@ -9,7 +9,7 @@ Firmware fuer den CH32V003J4M6 (RISC-V) zur Steuerung einer Hochleistungs-LED ue
 | Komponente | Pin | Funktion |
 |:---|:---|:---|
 | **RC Input** | PC4 (Pin 7) | RC-Empfaengersignal (1000–2000 µs) |
-| **PWM Out** | PC2 (Pin 6) | TIM2_CH2 Hardware-PWM fuer AL8862 |
+| **PWM Out** | PC2 (Pin 6) | TIM2_CH2 Hardware-PWM für AL8862 |
 | **SWD** | PD1 (Pin 8) | WCH-LinkE Programmierung |
 
 > **Hinweis:** PC1 und PA1/PD6 haben in dieser Firmware keine Funktion mehr.
@@ -37,9 +37,9 @@ Firmware fuer den CH32V003J4M6 (RISC-V) zur Steuerung einer Hochleistungs-LED ue
 | **Vollgas-Burst** | Sprung auf >**1950 µs** → kurzer 20-ms-Blitz auf 100 % als "Ueberdruck"-Effekt |
 | **Flame-Out** | Abruptes Gas-weg (von >1800 µs auf <1200 µs) → **150 ms** heftiges Flackern (±40 %) als "Flamme erstickt"-Simulation |
 | **Cool-Down** | Sanftes Abklingen auf 0 % in **250 ms** – wie ein gluehender Turbinenkern |
-| **Power-On Selftest** | LED geht nach Einschalten fuer **200 ms** auf **50 %** als Lebenszeichen |
+| **Power-On Selftest** | LED geht nach Einschalten für **200 ms** auf **50 %** als Lebenszeichen |
 | **Flicker (normal)** | Zufaelliges Rauschen ±15 % im Betrieb |
-| **Heat-Shimmer** | Ab **1900 µs**: verstaerktes Rauschen ±25 % fuer Turbulenzen im Vollgasbereich |
+| **Heat-Shimmer** | Ab **1900 µs**: verstaerktes Rauschen ±25 % für Turbulenzen im Vollgasbereich |
 | **Fail-Safe** | Bei Signalverlust (Timeout > 50 ms) sofort **LED AUS** |
 
 ---
@@ -111,7 +111,7 @@ Alle Parameter sind als `#define` in `User/main.c` direkt im Code konfigurierbar
 | `SELFTEST_DUTY` | 50 % | Helligkeit beim Selftest |
 | `FLICKER_NORMAL` | ±15 % | Normales Flackern |
 | `FLICKER_HEAT` | ±25 % | Heat-Shimmer-Flackern |
-| `HEAT_THRESHOLD` | 1900 µs | Schwellwert fuer Heat-Shimmer |
+| `HEAT_THRESHOLD` | 1900 µs | Schwellwert für Heat-Shimmer |
 | `RC_TIMEOUT_TICKS` | 500 | 50 ms Fail-Safe-Timeout |
 
 ---

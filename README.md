@@ -21,7 +21,7 @@
 
 ## Kurzbeschreibung
 
-RC-gesteuerter LED-Treiber fuer 1W (330mA) bis 3W (830mA) LEDs – konfigurierbar ueber Compile-Time Defines, klein, effizient, RISC-V-basiert.
+RC-gesteuerter LED-Treiber für 1W (330mA) bis 3W (830mA) LEDs – konfigurierbar über Compile-Time Defines, klein, effizient, RISC-V-basiert.
 
 ```
 RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
@@ -30,12 +30,12 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
 **Vorteile:**
 
 - Konstantstrom ohne Vorwiderstand
-- Kompakte Platine fuer 1W und 3W LEDs
-- LED-Typ compile-time waehlbar (1W = 100%, 500mA = 60%, 666mA = 80%, 830mA = 100% max Duty-Cycle)
+- Kompakte Platine für 1W und 3W LEDs
+- LED-Typ compile-time wählbar (1W = 100%, 500mA = 60%, 666mA = 80%, 830mA = 100% max Duty-Cycle)
 - Fail-Safe bei Signalverlust
-- 5V–12.6V Eingangsspannung (LiPo 2S–3S); moeglich bis 16.8V (4S, ausserhalb AMS1117-Spezifikation)
+- 5V–12.6V Eingangsspannung (LiPo 2S–3S); möglich bis 16.8V (4S, ausserhalb AMS1117-Spezifikation)
 
-**Ideal fuer:** RC-Fahrzeuge, Flugzeuge, Drohnen, Modellbau, Modellbahnen
+**Ideal für:** RC-Fahrzeuge, Flugzeuge, Drohnen, Modellbau, Modellbahnen
 
 ---
 
@@ -66,7 +66,7 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
 | Komponente | Beschreibung | Hinweis |
 |------------|--------------|---------|
 | sStromDingens PCB | Hardware v2.0 | Gerber: `Hardware/KiCad/sStromDingens/production/` |
-| 1W oder 3W LED | Beliebige Farbe | Konfigurierbar ueber Compile-Time Define (siehe Software-Abschnitt) |
+| 1W oder 3W LED | Beliebige Farbe | Konfigurierbar über Compile-Time Define (siehe Software-Abschnitt) |
 | LiPo 2S-4S | 7.4V – 16.8V | 2S–3S empfohlen |
 | RC-Empfänger | Beliebig | Optional bei ON-Jumper geschlossen |
 | WCH-LinkE | Programmer | Für Firmware-Flash |
@@ -126,11 +126,11 @@ RC-Signal ──► CH32V003 ──► AL8862 ──► LED (1W oder 3W)
 
 ### LED-Strom-Modifikation
 
-Fuer hoehere LED-Stroeme (500mA–830mA): Einen zusaetzlichen **300mΩ Widerstand** parallel zum bestehenden R4 (300mΩ) loeten (huckepack). Das halbiert den Gesamtwiderstand und verdoppelt den maximalen Strom.
+Für höhere LED-Ströme (500mA–830mA): Einen zusätzlichen **300mΩ Widerstand** parallel zum bestehenden R4 (300mΩ) löten (huckepack). Das halbiert den Gesamtwiderstand und verdoppelt den maximalen Strom.
 
 > ⚠️ **Wichtig:** Bei modifizierter Hardware wird der **AL8862 sehr heiss**! Zwingend eine  
-> **dauerhafte zusaetzliche Kuehlung** erforderlich (z.B. Kuehlkoerper,  
-> Gehaeuseluefter, thermisch leitende Verbindung zur Aluminium-Platine).
+> **dauerhafte zusätzliche Kühlung** erforderlich (z.B. Kühlkörper,  
+> Gehäuselüfter, thermisch leitende Verbindung zur Aluminium-Platine).
 
 | LED-Typ | Max. Strom | Duty-Cycle | Hardware |
 |---------|-----------|-----------|----------|
@@ -219,7 +219,7 @@ sStromDingens/
 │       └── README.md # Afterburner Dokumentation
 ├── images/           # Bilder (Top, PCB, Bottom)
 ├── AGENTS.md         # KI-Dokumentation & Build-Referenz
-├── CHANGELOG.md      # Aenderungshistorie
+├── CHANGELOG.md      # Änderungshistorie
 ├── LICENSE           # GNU GPLv3
 ├── README.md         # Deutsche Dokumentation
 └── README_EN.md      # Englische Dokumentation
