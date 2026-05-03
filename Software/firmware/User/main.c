@@ -38,7 +38,7 @@
  * LED_666 = 666mA         , PWM_MAX_DUTY = 80%,  modifizierte Hardware (2x300 mOhm)
  * LED_830 = 830mA         , PWM_MAX_DUTY = 100%, modifizierte Hardware (2x300 mOhm)
  */
-#define LED_500
+#define LED_1W
 
 #include "debug.h"
 #include "ch32v00x_exti.h"
